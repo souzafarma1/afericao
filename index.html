@@ -3915,64 +3915,98 @@
     const horaFormatada = agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
     const idadeCliente = cliente.idade ? `${cliente.idade} anos` : '';
     
-    let mensagem = `*SOUZA FARMA – Farmácia do Trabalhador*\n`;
-    mensagem += `A Neto E Souza – CNPJ 45.856.880/0001-30\n`;
-    mensagem += `Av. José Sarney nº 06, Quadra 03 – Bairro Bom Jesus – São Luís/MA\n`;
-    mensagem += `Telefone: (98) 98628-7296\n\n`;
-    
+    let mensagem = `*SOUZA FARMA - Farmacia do Trabalhador*\n`;
+    mensagem += `CNPJ: 45.856.880/0001-30\n`;
+    mensagem += `Av. Jose Sarney nº 06, Qd 03 - Bom Jesus - Sao Luis/MA\n`;
+    mensagem += `Tel: (98) 98628-7296\n\n`;
+    mensagem += `----------------------------------------\n\n`;
     mensagem += `*RESULTADOS DOS TESTES*\n\n`;
     mensagem += `*Cliente:* ${cliente.nome}\n`;
     mensagem += `*Idade:* ${idadeCliente}\n`;
     mensagem += `*Telefone:* ${cliente.telefone}\n`;
     mensagem += `*Data:* ${dataFormatada}\n`;
     mensagem += `*Hora:* ${horaFormatada}\n\n`;
+    mensagem += `----------------------------------------\n\n`;
     
-    if (resultadoGlicemia.style.display !== 'none') {
-        const glicemia = document.getElementById('glicemia').value;
-        const resultadoGlic = document.getElementById('textoGlicemia').textContent;
+    function extractCurrentRecommendations(elementId) {
+        const msgElement = document.getElementById(elementId);
+        if (!msgElement) return '';
         
-        mensagem += `*GLICEMIA CAPILAR*\n`;
-        mensagem += `Valor: ${glicemia} mg/dL\n`;
-        mensagem += `Resultado: ${resultadoGlic.split(' - ').pop() || resultadoGlic}\n\n`;
+        const recDiv = msgElement.querySelector('.recomendacoes-automaticas');
+        if (!recDiv) return '';
+        
+        let result = `[RECOMENDACOES]\n`;
+        const items = recDiv.querySelectorAll('li');
+        for (let i = 0; i < items.length; i++) {
+            const text = items[i].textContent.trim();
+            if (text) result += `  -> ${text}\n`;
+        }
+        return result;
     }
     
+    // Glicemia
+    if (resultadoGlicemia.style.display !== 'none') {
+        const glicemia = document.getElementById('glicemia').value;
+        const textoResultado = document.getElementById('textoGlicemia').textContent;
+        const classificacao = textoResultado.split(' - ').pop() || textoResultado;
+        
+        mensagem += `*TESTE DE GLICEMIA*\n`;
+        mensagem += `   Valor: ${glicemia} mg/dL\n`;
+        mensagem += `   Classificacao: ${classificacao}\n`;
+        
+        const recs = extractCurrentRecommendations('mensagemGlicemia');
+        if (recs) mensagem += recs;
+        mensagem += `\n`;
+    }
+    
+    // Pressão
     if (resultadoPressao.style.display !== 'none') {
         const sistolica = document.getElementById('pressaoSistolica').value;
         const diastolica = document.getElementById('pressaoDiastolica').value;
         const pulso = document.getElementById('pulso').value;
         
         if (sistolica && diastolica) {
-            const resultadoPress = document.getElementById('textoPressao').textContent;
-            mensagem += `*PRESSÃO ARTERIAL*\n`;
-            mensagem += `Valor: ${sistolica}/${diastolica} mmHg\n`;
-            mensagem += `Resultado: ${resultadoPress.split(' - ').pop() || resultadoPress}\n\n`;
+            const textoResultado = document.getElementById('textoPressao').textContent;
+            const classificacao = textoResultado.split(' - ').pop() || textoResultado;
+            
+            mensagem += `*TESTE DE PRESSAO ARTERIAL*\n`;
+            mensagem += `   Valor: ${sistolica}/${diastolica} mmHg\n`;
+            mensagem += `   Classificacao: ${classificacao}\n`;
+            
+            const recs = extractCurrentRecommendations('mensagemPressao');
+            if (recs) mensagem += recs;
+            mensagem += `\n`;
         }
         
         if (pulso) {
-            const resultadoPulsoText = document.getElementById('textoPulso').textContent;
-            mensagem += `*FREQUÊNCIA CARDÍACA*\n`;
-            mensagem += `Valor: ${pulso} bpm\n`;
-            mensagem += `Resultado: ${resultadoPulsoText.split(' - ').pop() || resultadoPulsoText}\n\n`;
+            const textoResultado = document.getElementById('textoPulso').textContent;
+            const classificacao = textoResultado.split(' - ').pop() || textoResultado;
+            
+            mensagem += `*FREQUENCIA CARDIACA (PULSO)*\n`;
+            mensagem += `   Valor: ${pulso} bpm\n`;
+            mensagem += `   Classificacao: ${classificacao}\n`;
+            
+            const recs = extractCurrentRecommendations('mensagemPulso');
+            if (recs) mensagem += recs;
+            mensagem += `\n`;
         }
     }
     
-    mensagem += `_Esta informação é fornecida para orientação e não substitui a consulta médica._\n\n`;
-    mensagem += `Documento gerado em: ${agora.toLocaleDateString('pt-BR')} ${agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}\n`;
-    mensagem += `Cuidando da sua saúde, economia e preço baixo`;
+    mensagem += `----------------------------------------\n\n`;
+    mensagem += `ATENCAO: Esta informacao e fornecida para orientacao e nao substitui a consulta medica.\n\n`;
+    mensagem += `Gerado em: ${agora.toLocaleDateString('pt-BR')} as ${agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}\n`;
+    mensagem += `Souza Farma - Cuidando da sua saude, economia e preco baixo`;
     
     const mensagemCodificada = encodeURIComponent(mensagem);
     
-    // CORREÇÃO: Pegar telefone do cliente e formatar para WhatsApp
-    let telefoneCliente = cliente.telefone.replace(/\D/g, ''); // Remove tudo que não é número
-    
-    // Se tiver DDI (55) e DDD (98), mantém, senão adiciona
+    let telefoneCliente = cliente.telefone.replace(/\D/g, '');
     if (telefoneCliente.length === 11) {
-        // Formato: 5598986287296
         telefoneCliente = '55' + telefoneCliente;
-    } else if (telefoneCliente.length === 13 && telefoneCliente.startsWith('55')) {
-        // Já tem o 55, mantém como está
+    } else if (telefoneCliente.length === 10) {
+        telefoneCliente = '55' + telefoneCliente;
+    } else if (!telefoneCliente.startsWith('55') && telefoneCliente.length === 13) {
+        // já tem 55
     } else {
-        // Assume que é número brasileiro e adiciona 55
         telefoneCliente = '55' + telefoneCliente;
     }
     
@@ -4845,17 +4879,27 @@
         return;
     }
     
-    const dataKey = data.toISOString().split('T')[0] + '_' + data.getHours() + '_' + data.getMinutes();
-    const idadeTexto = cliente.idade ? `${cliente.idade} anos` : '';
+    // Encontrar a data/hora exata
+    const dataExata = new Date(dataString);
+    const ano = dataExata.getFullYear();
+    const mes = dataExata.getMonth();
+    const dia = dataExata.getDate();
+    const hora = dataExata.getHours();
+    const minuto = dataExata.getMinutes();
     
+    // Filtrar testes com a mesma data e hora
     const testesDoDia = testes.filter(t => {
         const testeData = new Date(t.data);
-        const testeDataKey = testeData.toISOString().split('T')[0] + '_' + testeData.getHours() + '_' + testeData.getMinutes();
-        return t.clienteId === clienteId && testeDataKey === dataKey;
+        return t.clienteId === clienteId &&
+               testeData.getFullYear() === ano &&
+               testeData.getMonth() === mes &&
+               testeData.getDate() === dia &&
+               testeData.getHours() === hora &&
+               testeData.getMinutes() === minuto;
     });
     
     if (testesDoDia.length === 0) {
-        mostrarNotificacao('Nenhum teste encontrado para esta data', 'error');
+        mostrarNotificacao('Nenhum teste encontrado para esta data/hora', 'error');
         return;
     }
     
@@ -4863,49 +4907,110 @@
     const testePressao = testesDoDia.find(t => t.tipo === 'pressao');
     const testePulso = testesDoDia.find(t => t.tipo === 'pulso');
     
-    let mensagem = `*SOUZA FARMA – Farmácia do Trabalhador*\n`;
-    mensagem += `A Neto E Souza – CNPJ 45.856.880/0001-30\n`;
-    mensagem += `Av. José Sarney nº 06, Quadra 03 – Bairro Bom Jesus – São Luís/MA\n`;
-    mensagem += `Telefone: (98) 98628-7296\n\n`;
+    const idadeTexto = cliente.idade ? `${cliente.idade} anos` : '';
+    const dataFormatada = dataExata.toLocaleDateString('pt-BR');
+    const horaFormatada = dataExata.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
     
+    let mensagem = `*SOUZA FARMA - Farmacia do Trabalhador*\n`;
+    mensagem += `CNPJ: 45.856.880/0001-30\n`;
+    mensagem += `Av. Jose Sarney nº 06, Qd 03 - Bom Jesus - Sao Luis/MA\n`;
+    mensagem += `Tel: (98) 98628-7296\n\n`;
+    mensagem += `----------------------------------------\n\n`;
     mensagem += `*RESULTADOS DOS TESTES*\n\n`;
     mensagem += `*Cliente:* ${cliente.nome}\n`;
     mensagem += `*Idade:* ${idadeTexto}\n`;
     mensagem += `*Telefone:* ${cliente.telefone}\n`;
-    mensagem += `*Data:* ${data.toLocaleDateString('pt-BR')}\n`;
-    mensagem += `*Hora:* ${data.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}\n\n`;
+    mensagem += `*Data:* ${dataFormatada}\n`;
+    mensagem += `*Hora:* ${horaFormatada}\n\n`;
+    mensagem += `----------------------------------------\n\n`;
     
+    // Função para extrair texto puro do HTML das recomendações
+    function extractRecommendations(htmlMessage) {
+        if (!htmlMessage) return '';
+        
+        // Criar um elemento DOM temporário
+        const temp = document.createElement('div');
+        temp.innerHTML = htmlMessage;
+        
+        // Procurar a div de recomendações
+        const recDiv = temp.querySelector('.recomendacoes-automaticas');
+        if (!recDiv) return '';
+        
+        let result = `[RECOMENDACOES]\n`;
+        
+        // Pegar todos os itens da lista
+        const items = recDiv.querySelectorAll('li');
+        for (let i = 0; i < items.length; i++) {
+            const itemText = items[i].textContent.trim();
+            if (itemText) {
+                result += `  -> ${itemText}\n`;
+            }
+        }
+        
+        return result;
+    }
+    
+    // Função para extrair a classificação
+    function extractClassification(resultStr) {
+        if (!resultStr) return '';
+        const parts = resultStr.split(' - ');
+        return parts.length > 1 ? parts[parts.length - 1] : resultStr;
+    }
+    
+    // Função para extrair o valor numérico/medida
+    function extractValue(teste) {
+        if (!teste) return '';
+        if (teste.tipo === 'glicemia') return `${teste.valor} mg/dL`;
+        if (teste.tipo === 'pressao') return `${teste.valor} mmHg`;
+        if (teste.tipo === 'pulso') return `${teste.valor} bpm`;
+        return teste.valor;
+    }
+    
+    // Glicemia
     if (testeGlicemia) {
-        mensagem += `*GLICEMIA CAPILAR*\n`;
-        mensagem += `Valor: ${testeGlicemia.valor} mg/dL\n`;
-        mensagem += `Resultado: ${testeGlicemia.resultado.split(' - ').pop() || testeGlicemia.resultado}\n\n`;
+        mensagem += `*TESTE DE GLICEMIA*\n`;
+        mensagem += `   Valor: ${extractValue(testeGlicemia)}\n`;
+        mensagem += `   Classificacao: ${extractClassification(testeGlicemia.resultado)}\n`;
+        const recs = extractRecommendations(testeGlicemia.mensagem);
+        if (recs) mensagem += recs;
+        mensagem += `\n`;
     }
     
+    // Pressão Arterial
     if (testePressao) {
-        mensagem += `*PRESSÃO ARTERIAL*\n`;
-        mensagem += `Valor: ${testePressao.valor} mmHg\n`;
-        mensagem += `Resultado: ${testePressao.resultado.split(' - ').pop() || testePressao.resultado}\n\n`;
+        mensagem += `*TESTE DE PRESSAO ARTERIAL*\n`;
+        mensagem += `   Valor: ${extractValue(testePressao)}\n`;
+        mensagem += `   Classificacao: ${extractClassification(testePressao.resultado)}\n`;
+        const recs = extractRecommendations(testePressao.mensagem);
+        if (recs) mensagem += recs;
+        mensagem += `\n`;
     }
     
+    // Pulso/Frequência Cardíaca
     if (testePulso) {
-        mensagem += `*FREQUÊNCIA CARDÍACA*\n`;
-        mensagem += `Valor: ${testePulso.valor} bpm\n`;
-        mensagem += `Resultado: ${testePulso.resultado.split(' - ').pop() || testePulso.resultado}\n\n`;
+        mensagem += `*FREQUENCIA CARDIACA (PULSO)*\n`;
+        mensagem += `   Valor: ${extractValue(testePulso)}\n`;
+        mensagem += `   Classificacao: ${extractClassification(testePulso.resultado)}\n`;
+        const recs = extractRecommendations(testePulso.mensagem);
+        if (recs) mensagem += recs;
+        mensagem += `\n`;
     }
     
-    mensagem += `_Esta informação é fornecida para orientação e não substitui a consulta médica._\n\n`;
-    mensagem += `Documento gerado em: ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}\n`;
-    mensagem += `Cuidando da sua saúde, economia e preço baixo`;
+    mensagem += `----------------------------------------\n\n`;
+    mensagem += `ATENCAO: Esta informacao e fornecida para orientacao e nao substitui a consulta medica.\n\n`;
+    mensagem += `Gerado em: ${new Date().toLocaleDateString('pt-BR')} as ${new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}\n`;
+    mensagem += `Souza Farma - Cuidando da sua saude, economia e preco baixo`;
     
     const mensagemCodificada = encodeURIComponent(mensagem);
     
-    // CORREÇÃO: Pegar telefone do cliente e formatar para WhatsApp
+    // Formatar telefone do cliente para WhatsApp
     let telefoneCliente = cliente.telefone.replace(/\D/g, '');
-    
     if (telefoneCliente.length === 11) {
         telefoneCliente = '55' + telefoneCliente;
-    } else if (telefoneCliente.length === 13 && telefoneCliente.startsWith('55')) {
-        // Já tem o 55, mantém como está
+    } else if (telefoneCliente.length === 10) {
+        telefoneCliente = '55' + telefoneCliente;
+    } else if (!telefoneCliente.startsWith('55') && telefoneCliente.length === 13) {
+        // já tem 55
     } else {
         telefoneCliente = '55' + telefoneCliente;
     }
@@ -4913,7 +5018,7 @@
     const linkWhatsApp = `https://wa.me/${telefoneCliente}?text=${mensagemCodificada}`;
     
     window.open(linkWhatsApp, '_blank');
-    mostrarNotificacao(`Enviando testes combinados para ${cliente.nome} via WhatsApp...`);
+    mostrarNotificacao(`Enviando resultados com recomendacoes para ${cliente.nome} via WhatsApp...`);
 }
     </script>
 </body>
