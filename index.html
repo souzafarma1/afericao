@@ -3416,240 +3416,325 @@
 
         // 1. FUNÇÃO DE IMPRESSÃO TÉRMICA OTIMIZADA
         function imprimirTermica() {
-            if (!clienteSelecionadoId) {
-                mostrarNotificacao('Selecione um cliente primeiro!', 'error');
-                document.getElementById('buscaCliente').focus();
-                return;
-            }
-            
-            const cliente = clientes.find(c => c.id === clienteSelecionadoId);
-            if (!cliente) return;
-            
-            const resultadoGlicemia = document.getElementById('resultadoGlicemia');
-            const resultadoPressao = document.getElementById('resultadoPressao');
-            
-            if (resultadoGlicemia.style.display === 'none' && resultadoPressao.style.display === 'none') {
-                mostrarNotificacao('Nenhum teste para imprimir!', 'error');
-                return;
-            }
-            
-            const agora = new Date();
-            const dataFormatada = agora.toLocaleDateString('pt-BR');
-            const horaFormatada = agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
-            const idadeCliente = cliente.idade ? `${cliente.idade} anos` : '';
-            
-            let conteudoImpressao = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Resultados - Souza Farma</title>
-                    <style>
-                        @media print {
-                            @page {
-                                margin: 0mm !important;
-                                size: 80mm auto !important;
-                            }
-                            
-                            body {
-                                font-family: 'Courier New', monospace !important;
-                                font-size: 12px !important;
-                                font-weight: bold !important;
-                                line-height: 1.2 !important;
-                                width: 80mm !important;
-                                margin: 2mm !important;
-                                padding: 0 !important;
-                                color: black !important;
-                                background: white !important;
-                                -webkit-print-color-adjust: exact !important;
-                            }
-                            
-                            .header {
-                                text-align: center;
-                                margin-bottom: 5px;
-                                padding-bottom: 3px;
-                                border-bottom: 2px solid black !important;
-                            }
-                            
-                            h1 {
-                                font-size: 14px !important;
-                                font-weight: bold !important;
-                                margin: 2px 0 !important;
-                                text-transform: uppercase;
-                            }
-                            
-                            h2 {
-                                font-size: 12px !important;
-                                font-weight: bold !important;
-                                margin: 8px 0 4px 0 !important;
-                            }
-                            
-                            h3 {
-                                font-size: 11px !important;
-                                font-weight: bold !important;
-                                margin: 6px 0 3px 0 !important;
-                            }
-                            
-                            p {
-                                margin: 3px 0 !important;
-                                word-wrap: break-word;
-                                font-weight: bold !important;
-                            }
-                            
-                            .teste {
-                                margin: 6px 0 !important;
-                                padding: 4px 0 !important;
-                                border-top: 1px dashed black !important;
-                            }
-                            
-                            .alerta {
-                                margin: 8px 0 !important;
-                                padding: 4px !important;
-                                background-color: #f0f0f0 !important;
-                                border: 1px solid black !important;
-                                font-size: 10px !important;
-                                font-weight: bold !important;
-                            }
-                            
-                            .footer {
-                                margin-top: 8px !important;
-                                padding-top: 4px !important;
-                                border-top: 2px solid black !important;
-                                font-size: 10px !important;
-                                font-weight: bold !important;
-                                text-align: center;
-                            }
-                            
-                            .destaque {
-                                font-weight: bold !important;
-                            }
-                            
-                            .centralizado {
-                                text-align: center !important;
-                            }
-                            
-                            .linha-dupla {
-                                border-bottom: 3px double black !important;
-                                margin: 5px 0 !important;
-                            }
-                            
-                            .resultado {
-                                font-weight: bold !important;
-                                text-decoration: underline;
-                            }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>SOUZA FARMA</h1>
-                        <p>Farmácia do Trabalhador</p>
-                        <p>CNPJ: 45.856.880/0001-30</p>
-                        <p>Av. José Sarney nº 06, Qd 03</p>
-                        <p>Bom Jesus - São Luís/MA</p>
-                        <p>Tel: (98) 98628-7296</p>
-                        <div class="linha-dupla"></div>
-                    </div>
+    if (!clienteSelecionadoId) {
+        mostrarNotificacao('Selecione um cliente primeiro!', 'error');
+        document.getElementById('buscaCliente').focus();
+        return;
+    }
+    
+    const cliente = clientes.find(c => c.id === clienteSelecionadoId);
+    if (!cliente) return;
+    
+    const resultadoGlicemia = document.getElementById('resultadoGlicemia');
+    const resultadoPressao = document.getElementById('resultadoPressao');
+    
+    if (resultadoGlicemia.style.display === 'none' && resultadoPressao.style.display === 'none') {
+        mostrarNotificacao('Nenhum teste para imprimir!', 'error');
+        return;
+    }
+    
+    const agora = new Date();
+    const dataFormatada = agora.toLocaleDateString('pt-BR');
+    const horaFormatada = agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+    const idadeCliente = cliente.idade ? `${cliente.idade} anos` : '';
+    
+    // Função para extrair recomendações atuais da tela
+    function extractCurrentRecommendations(elementId) {
+        const msgElement = document.getElementById(elementId);
+        if (!msgElement) return [];
+        
+        const recDiv = msgElement.querySelector('.recomendacoes-automaticas');
+        if (!recDiv) return [];
+        
+        const items = [];
+        const lis = recDiv.querySelectorAll('li');
+        for (let i = 0; i < lis.length; i++) {
+            const text = lis[i].textContent.trim();
+            if (text) items.push(text);
+        }
+        return items;
+    }
+    
+    function extractClassification(elementId) {
+        const elemento = document.getElementById(elementId);
+        if (!elemento) return '';
+        const texto = elemento.textContent;
+        const parts = texto.split(' - ');
+        return parts.length > 1 ? parts[parts.length - 1] : texto;
+    }
+    
+    let conteudoImpressao = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Resultados - Souza Farma</title>
+            <style>
+                @media print {
+                    @page {
+                        margin: 0mm;
+                        size: 80mm auto;
+                    }
                     
-                    <h2 class="centralizado">RESULTADOS DOS TESTES</h2>
+                    body {
+                        font-family: 'Courier New', monospace;
+                        font-size: 11px;
+                        line-height: 1.3;
+                        width: 80mm;
+                        margin: 2mm;
+                        padding: 0;
+                        color: black;
+                        background: white;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
                     
-                    <h3>INFORMAÇÕES DO CLIENTE</h3>
-                    <p><span class="destaque">Cliente:</span> ${cliente.nome}</p>
-                    <p><span class="destaque">Idade:</span> ${idadeCliente}</p>
-                    <p><span class="destaque">Telefone:</span> ${cliente.telefone}</p>
-                    <p><span class="destaque">Data:</span> ${dataFormatada}</p>
-                    <p><span class="destaque">Hora:</span> ${horaFormatada}</p>
+                    .header {
+                        text-align: center;
+                        margin-bottom: 8px;
+                        padding-bottom: 5px;
+                        border-bottom: 2px solid black;
+                    }
                     
-                    <div class="linha-dupla"></div>
-            `;
-            
-            // Adicionar resultado da glicemia
-            if (resultadoGlicemia.style.display !== 'none') {
-                const glicemia = document.getElementById('glicemia').value;
-                const resultadoGlic = document.getElementById('textoGlicemia').textContent;
-                const classificacao = resultadoGlic.includes('NORMAL') ? 'NORMAL' : 
-                                    resultadoGlic.includes('ALERT') ? 'ALERTA' : 'ATENÇÃO';
-                
-                conteudoImpressao += `
-                    <div class="teste">
-                        <h3>GLICEMIA CAPILAR</h3>
-                        <p><span class="destaque">Valor:</span> ${glicemia} mg/dL</p>
-                        <p><span class="destaque">Resultado:</span> ${classificacao}</p>
-                        <p><span class="destaque">Orientações:</span></p>
-                        <p>${document.getElementById('mensagemGlicemia').textContent.substring(0, 60)}</p>
-                    </div>
-                `;
-            }
-            
-            // Adicionar resultado da pressão e pulso
-            if (resultadoPressao.style.display !== 'none') {
-                const sistolica = document.getElementById('pressaoSistolica').value;
-                const diastolica = document.getElementById('pressaoDiastolica').value;
-                const pulso = document.getElementById('pulso').value;
-                
-                if (sistolica && diastolica) {
-                    const resultadoPress = document.getElementById('textoPressao').textContent;
-                    const classificacaoPress = resultadoPress.includes('NORMAL') ? 'NORMAL' : 
-                                            resultadoPress.includes('ALERT') ? 'ALERTA' : 'ATENÇÃO';
+                    .title {
+                        font-size: 14px;
+                        font-weight: bold;
+                        margin: 2px 0;
+                        text-transform: uppercase;
+                    }
                     
-                    conteudoImpressao += `
-                        <div class="teste">
-                            <h3>PRESSÃO ARTERIAL</h3>
-                            <p><span class="destaque">Valor:</span> ${sistolica}/${diastolica} mmHg</p>
-                            <p><span class="destaque">Resultado:</span> ${classificacaoPress}</p>
-                        </div>
-                    `;
+                    .subtitle {
+                        font-size: 10px;
+                        margin: 2px 0;
+                    }
+                    
+                    .divider {
+                        border-bottom: 1px dashed black;
+                        margin: 5px 0;
+                    }
+                    
+                    .divider-double {
+                        border-bottom: 2px solid black;
+                        margin: 5px 0;
+                    }
+                    
+                    .section-title {
+                        font-size: 12px;
+                        font-weight: bold;
+                        margin: 8px 0 4px 0;
+                        text-align: center;
+                        text-decoration: underline;
+                    }
+                    
+                    .client-info {
+                        margin: 8px 0;
+                        padding: 5px;
+                        border: 1px solid black;
+                    }
+                    
+                    .client-info p {
+                        margin: 2px 0;
+                    }
+                    
+                    .teste {
+                        margin: 8px 0;
+                        padding: 5px;
+                        border: 1px solid #ccc;
+                    }
+                    
+                    .test-title {
+                        font-size: 11px;
+                        font-weight: bold;
+                        margin-bottom: 5px;
+                        background-color: #f0f0f0;
+                        padding: 2px 5px;
+                    }
+                    
+                    .test-value {
+                        margin: 3px 0;
+                    }
+                    
+                    .test-classification {
+                        margin: 3px 0;
+                        font-weight: bold;
+                    }
+                    
+                    .recomendacoes {
+                        margin: 5px 0 0 0;
+                        padding: 5px;
+                        background-color: #f9f9f9;
+                        border-left: 3px solid #333;
+                    }
+                    
+                    .recomendacoes-title {
+                        font-weight: bold;
+                        margin-bottom: 3px;
+                    }
+                    
+                    .recomendacoes-item {
+                        margin: 2px 0 2px 10px;
+                    }
+                    
+                    .footer {
+                        margin-top: 10px;
+                        padding-top: 5px;
+                        border-top: 2px solid black;
+                        text-align: center;
+                        font-size: 9px;
+                    }
+                    
+                    .atencao {
+                        margin: 8px 0;
+                        padding: 5px;
+                        background-color: #f0f0f0;
+                        border: 1px solid black;
+                        text-align: center;
+                        font-size: 9px;
+                    }
+                    
+                    .bold {
+                        font-weight: bold;
+                    }
+                    
+                    .text-center {
+                        text-align: center;
+                    }
                 }
-                
-                if (pulso) {
-                    const resultadoPulsoText = document.getElementById('textoPulso').textContent;
-                    const classificacaoPulso = resultadoPulsoText.includes('NORMAL') ? 'NORMAL' : 
-                                            resultadoPulsoText.includes('ALERT') ? 'ALERTA' : 'ATENÇÃO';
-                    
-                    conteudoImpressao += `
-                        <div class="teste">
-                            <h3>FREQUÊNCIA CARDÍACA</h3>
-                            <p><span class="destaque">Valor:</span> ${pulso} bpm</p>
-                            <p><span class="destaque">Resultado:</span> ${classificacaoPulso}</p>
-                        </div>
-                    `;
-                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <div class="title">SOUZA FARMA</div>
+                <div class="subtitle">Farmacia do Trabalhador</div>
+                <div class="subtitle">CNPJ: 45.856.880/0001-30</div>
+                <div class="subtitle">Av. Jose Sarney nº 06, Qd 03</div>
+                <div class="subtitle">Bom Jesus - Sao Luis/MA</div>
+                <div class="subtitle">Tel: (98) 98628-7296</div>
+                <div class="divider-double"></div>
+            </div>
+            
+            <div class="section-title">RESULTADOS DOS TESTES</div>
+            
+            <div class="client-info">
+                <p><span class="bold">Cliente:</span> ${cliente.nome}</p>
+                <p><span class="bold">Idade:</span> ${idadeCliente}</p>
+                <p><span class="bold">Telefone:</span> ${cliente.telefone}</p>
+                <p><span class="bold">Data:</span> ${dataFormatada}</p>
+                <p><span class="bold">Hora:</span> ${horaFormatada}</p>
+            </div>
+            
+            <div class="divider"></div>
+    `;
+    
+    // Teste de Glicemia
+    if (resultadoGlicemia.style.display !== 'none') {
+        const glicemia = document.getElementById('glicemia').value;
+        const classificacao = extractClassification('textoGlicemia');
+        const recomendacoes = extractCurrentRecommendations('mensagemGlicemia');
+        
+        conteudoImpressao += `
+            <div class="teste">
+                <div class="test-title">[ TESTE DE GLICEMIA ]</div>
+                <div class="test-value">Valor: ${glicemia} mg/dL</div>
+                <div class="test-classification">Classificacao: ${classificacao}</div>
+        `;
+        
+        if (recomendacoes.length > 0) {
+            conteudoImpressao += `<div class="recomendacoes">`;
+            conteudoImpressao += `<div class="recomendacoes-title">Recomendacoes:</div>`;
+            for (let i = 0; i < recomendacoes.length; i++) {
+                conteudoImpressao += `<div class="recomendacoes-item">→ ${recomendacoes[i]}</div>`;
             }
+            conteudoImpressao += `</div>`;
+        }
+        
+        conteudoImpressao += `</div>`;
+    }
+    
+    // Teste de Pressão e Pulso
+    if (resultadoPressao.style.display !== 'none') {
+        const sistolica = document.getElementById('pressaoSistolica').value;
+        const diastolica = document.getElementById('pressaoDiastolica').value;
+        const pulso = document.getElementById('pulso').value;
+        
+        if (sistolica && diastolica) {
+            const classificacao = extractClassification('textoPressao');
+            const recomendacoes = extractCurrentRecommendations('mensagemPressao');
             
             conteudoImpressao += `
-                    <div class="linha-dupla"></div>
-                    
-                    <div class="alerta">
-                        <p class="destaque">IMPORTANTE:</p>
-                        <p>Este resultado é para orientação e não substitui consulta médica.</p>
-                        <p>Procure um médico para avaliação completa.</p>
-                    </div>
-                    
-                    <div class="footer">
-                        <p>Documento gerado: ${agora.toLocaleDateString('pt-BR')} ${agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}</p>
-                        <p>*** CUIDANDO DA SUA SAÚDE ***</p>
-                    </div>
-                </body>
-                </html>
+                <div class="teste">
+                    <div class="test-title">[ TESTE DE PRESSAO ARTERIAL ]</div>
+                    <div class="test-value">Valor: ${sistolica}/${diastolica} mmHg</div>
+                    <div class="test-classification">Classificacao: ${classificacao}</div>
             `;
             
-            // Criar nova janela para impressão
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(conteudoImpressao);
-            printWindow.document.close();
+            if (recomendacoes.length > 0) {
+                conteudoImpressao += `<div class="recomendacoes">`;
+                conteudoImpressao += `<div class="recomendacoes-title">Recomendacoes:</div>`;
+                for (let i = 0; i < recomendacoes.length; i++) {
+                    conteudoImpressao += `<div class="recomendacoes-item">→ ${recomendacoes[i]}</div>`;
+                }
+                conteudoImpressao += `</div>`;
+            }
             
-            // Aguardar carregamento e imprimir
-            printWindow.onload = function() {
-                setTimeout(() => {
-                    printWindow.print();
-                    setTimeout(() => {
-                        printWindow.close();
-                    }, 500);
-                }, 250);
-            };
-            
-            mostrarNotificacao('Preparando impressão térmica...');
+            conteudoImpressao += `</div>`;
         }
+        
+        if (pulso) {
+            const classificacao = extractClassification('textoPulso');
+            const recomendacoes = extractCurrentRecommendations('mensagemPulso');
+            
+            conteudoImpressao += `
+                <div class="teste">
+                    <div class="test-title">[ FREQUENCIA CARDIACA (PULSO) ]</div>
+                    <div class="test-value">Valor: ${pulso} bpm</div>
+                    <div class="test-classification">Classificacao: ${classificacao}</div>
+            `;
+            
+            if (recomendacoes.length > 0) {
+                conteudoImpressao += `<div class="recomendacoes">`;
+                conteudoImpressao += `<div class="recomendacoes-title">Recomendacoes:</div>`;
+                for (let i = 0; i < recomendacoes.length; i++) {
+                    conteudoImpressao += `<div class="recomendacoes-item">→ ${recomendacoes[i]}</div>`;
+                }
+                conteudoImpressao += `</div>`;
+            }
+            
+            conteudoImpressao += `</div>`;
+        }
+    }
+    
+    conteudoImpressao += `
+            <div class="divider"></div>
+            
+            <div class="atencao">
+                ATENCAO: Esta informacao e fornecida para orientacao<br>
+                e nao substitui a consulta medica.
+            </div>
+            
+            <div class="footer">
+                Documento gerado: ${agora.toLocaleDateString('pt-BR')} ${agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}<br>
+                Souza Farma - Cuidando da sua saude, economia e preco baixo
+            </div>
+        </body>
+        </html>
+    `;
+    
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(conteudoImpressao);
+    printWindow.document.close();
+    
+    printWindow.onload = function() {
+        setTimeout(() => {
+            printWindow.print();
+            setTimeout(() => {
+                printWindow.close();
+            }, 500);
+        }, 250);
+    };
+    
+    mostrarNotificacao('Preparando impressao termica...');
+}
 
         // 2. FUNÇÃO GERAR PDF
         function gerarPDF() {
@@ -4488,220 +4573,334 @@
 
         // Funções para testes combinados
         function imprimirTermicaCombinado(clienteId, dataString) {
-            const cliente = clientes.find(c => c.id === clienteId);
-            if (!cliente) {
-                mostrarNotificacao('Cliente não encontrado!', 'error');
-                return;
-            }
-            
-            const data = new Date(dataString);
-            const dataKey = data.toISOString().split('T')[0] + '_' + data.getHours() + '_' + data.getMinutes();
-            
-            const testesDoDia = testes.filter(t => {
-                const testeData = new Date(t.data);
-                const testeDataKey = testeData.toISOString().split('T')[0] + '_' + testeData.getHours() + '_' + testeData.getMinutes();
-                return t.clienteId === clienteId && testeDataKey === dataKey;
-            });
-            
-            if (testesDoDia.length === 0) {
-                mostrarNotificacao('Nenhum teste encontrado para esta data', 'error');
-                return;
-            }
-            
-            const dataFormatada = data.toLocaleDateString('pt-BR');
-            const horaFormatada = data.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
-            const idadeTexto = cliente.idade ? `${cliente.idade} anos` : '';
-            
-            const testeGlicemia = testesDoDia.find(t => t.tipo === 'glicemia');
-            const testePressao = testesDoDia.find(t => t.tipo === 'pressao');
-            const testePulso = testesDoDia.find(t => t.tipo === 'pulso');
-            
-            let conteudoImpressao = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Resultados - Souza Farma</title>
-                    <style>
-                        @media print {
-                            @page {
-                                margin: 0mm !important;
-                                size: 80mm auto !important;
-                            }
-                            
-                            body {
-                                font-family: 'Courier New', monospace !important;
-                                font-size: 12px !important;
-                                font-weight: bold !important;
-                                line-height: 1.2 !important;
-                                width: 80mm !important;
-                                margin: 2mm !important;
-                                padding: 0 !important;
-                                color: black !important;
-                                background: white !important;
-                                -webkit-print-color-adjust: exact !important;
-                            }
-                            
-                            .header {
-                                text-align: center;
-                                margin-bottom: 5px;
-                                padding-bottom: 3px;
-                                border-bottom: 2px solid black !important;
-                            }
-                            
-                            h1 {
-                                font-size: 14px !important;
-                                font-weight: bold !important;
-                                margin: 2px 0 !important;
-                                text-transform: uppercase;
-                            }
-                            
-                            h2 {
-                                font-size: 12px !important;
-                                font-weight: bold !important;
-                                margin: 8px 0 4px 0 !important;
-                            }
-                            
-                            h3 {
-                                font-size: 11px !important;
-                                font-weight: bold !important;
-                                margin: 6px 0 3px 0 !important;
-                            }
-                            
-                            p {
-                                margin: 3px 0 !important;
-                                word-wrap: break-word;
-                                font-weight: bold !important;
-                            }
-                            
-                            .teste {
-                                margin: 6px 0 !important;
-                                padding: 4px 0 !important;
-                                border-top: 1px dashed black !important;
-                            }
-                            
-                            .alerta {
-                                margin: 8px 0 !important;
-                                padding: 4px !important;
-                                background-color: #f0f0f0 !important;
-                                border: 1px solid black !important;
-                                font-size: 10px !important;
-                                font-weight: bold !important;
-                            }
-                            
-                            .footer {
-                                margin-top: 8px !important;
-                                padding-top: 4px !important;
-                                border-top: 2px solid black !important;
-                                font-size: 10px !important;
-                                font-weight: bold !important;
-                                text-align: center;
-                            }
-                            
-                            .destaque {
-                                font-weight: bold !important;
-                            }
-                            
-                            .centralizado {
-                                text-align: center !important;
-                            }
-                            
-                            .linha-dupla {
-                                border-bottom: 3px double black !important;
-                                margin: 5px 0 !important;
-                            }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>SOUZA FARMA</h1>
-                        <p>Farmácia do Trabalhador</p>
-                        <p>CNPJ: 45.856.880/0001-30</p>
-                        <p>Av. José Sarney nº 06, Qd 03</p>
-                        <p>Bom Jesus - São Luís/MA</p>
-                        <p>Tel: (98) 98628-7296</p>
-                        <div class="linha-dupla"></div>
-                    </div>
-                    
-                    <h2 class="centralizado">RESULTADOS DOS TESTES</h2>
-                    
-                    <h3>INFORMAÇÕES DO CLIENTE</h3>
-                    <p><span class="destaque">Cliente:</span> ${cliente.nome}</p>
-                    <p><span class="destaque">Idade:</span> ${idadeTexto}</p>
-                    <p><span class="destaque">Telefone:</span> ${cliente.telefone}</p>
-                    <p><span class="destaque">Data:</span> ${dataFormatada}</p>
-                    <p><span class="destaque">Hora:</span> ${horaFormatada}</p>
-                    
-                    <div class="linha-dupla"></div>
-            `;
-            
-            if (testeGlicemia) {
-                const resultadoGlic = testeGlicemia.resultado.split(' - ')[1] || testeGlicemia.resultado;
-                conteudoImpressao += `
-                    <div class="teste">
-                        <h3>GLICEMIA CAPILAR</h3>
-                        <p><span class="destaque">Valor:</span> ${testeGlicemia.valor} mg/dL</p>
-                        <p><span class="destaque">Resultado:</span> ${resultadoGlic}</p>
-                    </div>
-                `;
-            }
-            
-            if (testePressao) {
-                const resultadoPress = testePressao.resultado.split(' - ')[1] || testePressao.resultado;
-                conteudoImpressao += `
-                    <div class="teste">
-                        <h3>PRESSÃO ARTERIAL</h3>
-                        <p><span class="destaque">Valor:</span> ${testePressao.valor} mmHg</p>
-                        <p><span class="destaque">Resultado:</span> ${resultadoPress}</p>
-                    </div>
-                `;
-            }
-            
-            if (testePulso) {
-                const resultadoPulso = testePulso.resultado.split(' - ')[1] || testePulso.resultado;
-                conteudoImpressao += `
-                    <div class="teste">
-                        <h3>FREQUÊNCIA CARDÍACA</h3>
-                        <p><span class="destaque">Valor:</span> ${testePulso.valor} bpm</p>
-                        <p><span class="destaque">Resultado:</span> ${resultadoPulso}</p>
-                    </div>
-                `;
-            }
-            
-            const agora = new Date();
-            conteudoImpressao += `
-                    <div class="linha-dupla"></div>
-                    
-                    <div class="alerta">
-                        <p class="destaque">IMPORTANTE:</p>
-                        <p>Este resultado é para orientação e não substitui consulta médica.</p>
-                        <p>Procure um médico para avaliação completa.</p>
-                    </div>
-                    
-                    <div class="footer">
-                        <p>Documento gerado: ${agora.toLocaleDateString('pt-BR')} ${agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}</p>
-                        <p>*** CUIDANDO DA SUA SAÚDE ***</p>
-                    </div>
-                </body>
-                </html>
-            `;
-            
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(conteudoImpressao);
-            printWindow.document.close();
-            
-            printWindow.onload = function() {
-                setTimeout(() => {
-                    printWindow.print();
-                    setTimeout(() => {
-                        printWindow.close();
-                    }, 500);
-                }, 250);
-            };
-            
-            mostrarNotificacao('Preparando impressão térmica...');
+    const cliente = clientes.find(c => c.id === clienteId);
+    if (!cliente) {
+        mostrarNotificacao('Cliente não encontrado!', 'error');
+        return;
+    }
+    
+    const data = new Date(dataString);
+    const ano = data.getFullYear();
+    const mes = data.getMonth();
+    const dia = data.getDate();
+    const hora = data.getHours();
+    const minuto = data.getMinutes();
+    
+    const testesDoDia = testes.filter(t => {
+        const testeData = new Date(t.data);
+        return t.clienteId === clienteId &&
+               testeData.getFullYear() === ano &&
+               testeData.getMonth() === mes &&
+               testeData.getDate() === dia &&
+               testeData.getHours() === hora &&
+               testeData.getMinutes() === minuto;
+    });
+    
+    if (testesDoDia.length === 0) {
+        mostrarNotificacao('Nenhum teste encontrado para esta data', 'error');
+        return;
+    }
+    
+    const dataFormatada = data.toLocaleDateString('pt-BR');
+    const horaFormatada = data.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+    const idadeTexto = cliente.idade ? `${cliente.idade} anos` : '';
+    
+    const testeGlicemia = testesDoDia.find(t => t.tipo === 'glicemia');
+    const testePressao = testesDoDia.find(t => t.tipo === 'pressao');
+    const testePulso = testesDoDia.find(t => t.tipo === 'pulso');
+    
+    // Função para extrair recomendações do HTML
+    function extractRecommendationsText(htmlMessage) {
+        if (!htmlMessage) return [];
+        
+        const temp = document.createElement('div');
+        temp.innerHTML = htmlMessage;
+        
+        const recDiv = temp.querySelector('.recomendacoes-automaticas');
+        if (!recDiv) return [];
+        
+        const items = [];
+        const lis = recDiv.querySelectorAll('li');
+        for (let i = 0; i < lis.length; i++) {
+            const text = lis[i].textContent.trim();
+            if (text) items.push(text);
         }
+        return items;
+    }
+    
+    function extractClassification(resultStr) {
+        if (!resultStr) return '';
+        const parts = resultStr.split(' - ');
+        return parts.length > 1 ? parts[parts.length - 1] : resultStr;
+    }
+    
+    let conteudoImpressao = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Resultados - Souza Farma</title>
+            <style>
+                @media print {
+                    @page {
+                        margin: 0mm;
+                        size: 80mm auto;
+                    }
+                    
+                    body {
+                        font-family: 'Courier New', monospace;
+                        font-size: 11px;
+                        line-height: 1.3;
+                        width: 80mm;
+                        margin: 2mm;
+                        padding: 0;
+                        color: black;
+                        background: white;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                    
+                    .header {
+                        text-align: center;
+                        margin-bottom: 8px;
+                        padding-bottom: 5px;
+                        border-bottom: 2px solid black;
+                    }
+                    
+                    .title {
+                        font-size: 14px;
+                        font-weight: bold;
+                        margin: 2px 0;
+                        text-transform: uppercase;
+                    }
+                    
+                    .subtitle {
+                        font-size: 10px;
+                        margin: 2px 0;
+                    }
+                    
+                    .divider {
+                        border-bottom: 1px dashed black;
+                        margin: 5px 0;
+                    }
+                    
+                    .divider-double {
+                        border-bottom: 2px solid black;
+                        margin: 5px 0;
+                    }
+                    
+                    .section-title {
+                        font-size: 12px;
+                        font-weight: bold;
+                        margin: 8px 0 4px 0;
+                        text-align: center;
+                        text-decoration: underline;
+                    }
+                    
+                    .client-info {
+                        margin: 8px 0;
+                        padding: 5px;
+                        border: 1px solid black;
+                    }
+                    
+                    .client-info p {
+                        margin: 2px 0;
+                    }
+                    
+                    .teste {
+                        margin: 8px 0;
+                        padding: 5px;
+                        border: 1px solid #ccc;
+                    }
+                    
+                    .test-title {
+                        font-size: 11px;
+                        font-weight: bold;
+                        margin-bottom: 5px;
+                        background-color: #f0f0f0;
+                        padding: 2px 5px;
+                    }
+                    
+                    .test-value {
+                        margin: 3px 0;
+                    }
+                    
+                    .test-classification {
+                        margin: 3px 0;
+                        font-weight: bold;
+                    }
+                    
+                    .recomendacoes {
+                        margin: 5px 0 0 0;
+                        padding: 5px;
+                        background-color: #f9f9f9;
+                        border-left: 3px solid #333;
+                    }
+                    
+                    .recomendacoes-title {
+                        font-weight: bold;
+                        margin-bottom: 3px;
+                    }
+                    
+                    .recomendacoes-item {
+                        margin: 2px 0 2px 10px;
+                    }
+                    
+                    .footer {
+                        margin-top: 10px;
+                        padding-top: 5px;
+                        border-top: 2px solid black;
+                        text-align: center;
+                        font-size: 9px;
+                    }
+                    
+                    .atencao {
+                        margin: 8px 0;
+                        padding: 5px;
+                        background-color: #f0f0f0;
+                        border: 1px solid black;
+                        text-align: center;
+                        font-size: 9px;
+                    }
+                    
+                    .bold {
+                        font-weight: bold;
+                    }
+                    
+                    .text-center {
+                        text-align: center;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <div class="title">SOUZA FARMA</div>
+                <div class="subtitle">Farmacia do Trabalhador</div>
+                <div class="subtitle">CNPJ: 45.856.880/0001-30</div>
+                <div class="subtitle">Av. Jose Sarney nº 06, Qd 03</div>
+                <div class="subtitle">Bom Jesus - Sao Luis/MA</div>
+                <div class="subtitle">Tel: (98) 98628-7296</div>
+                <div class="divider-double"></div>
+            </div>
+            
+            <div class="section-title">RESULTADOS DOS TESTES</div>
+            
+            <div class="client-info">
+                <p><span class="bold">Cliente:</span> ${cliente.nome}</p>
+                <p><span class="bold">Idade:</span> ${idadeTexto}</p>
+                <p><span class="bold">Telefone:</span> ${cliente.telefone}</p>
+                <p><span class="bold">Data:</span> ${dataFormatada}</p>
+                <p><span class="bold">Hora:</span> ${horaFormatada}</p>
+            </div>
+            
+            <div class="divider"></div>
+    `;
+    
+    // Teste de Glicemia
+    if (testeGlicemia) {
+        const classificacao = extractClassification(testeGlicemia.resultado);
+        const recomendacoes = extractRecommendationsText(testeGlicemia.mensagem);
+        
+        conteudoImpressao += `
+            <div class="teste">
+                <div class="test-title">[ TESTE DE GLICEMIA ]</div>
+                <div class="test-value">Valor: ${testeGlicemia.valor} mg/dL</div>
+                <div class="test-classification">Classificacao: ${classificacao}</div>
+        `;
+        
+        if (recomendacoes.length > 0) {
+            conteudoImpressao += `<div class="recomendacoes">`;
+            conteudoImpressao += `<div class="recomendacoes-title">Recomendacoes:</div>`;
+            for (let i = 0; i < recomendacoes.length; i++) {
+                conteudoImpressao += `<div class="recomendacoes-item">→ ${recomendacoes[i]}</div>`;
+            }
+            conteudoImpressao += `</div>`;
+        }
+        
+        conteudoImpressao += `</div>`;
+    }
+    
+    // Teste de Pressão Arterial
+    if (testePressao) {
+        const classificacao = extractClassification(testePressao.resultado);
+        const recomendacoes = extractRecommendationsText(testePressao.mensagem);
+        
+        conteudoImpressao += `
+            <div class="teste">
+                <div class="test-title">[ TESTE DE PRESSAO ARTERIAL ]</div>
+                <div class="test-value">Valor: ${testePressao.valor} mmHg</div>
+                <div class="test-classification">Classificacao: ${classificacao}</div>
+        `;
+        
+        if (recomendacoes.length > 0) {
+            conteudoImpressao += `<div class="recomendacoes">`;
+            conteudoImpressao += `<div class="recomendacoes-title">Recomendacoes:</div>`;
+            for (let i = 0; i < recomendacoes.length; i++) {
+                conteudoImpressao += `<div class="recomendacoes-item">→ ${recomendacoes[i]}</div>`;
+            }
+            conteudoImpressao += `</div>`;
+        }
+        
+        conteudoImpressao += `</div>`;
+    }
+    
+    // Teste de Frequência Cardíaca
+    if (testePulso) {
+        const classificacao = extractClassification(testePulso.resultado);
+        const recomendacoes = extractRecommendationsText(testePulso.mensagem);
+        
+        conteudoImpressao += `
+            <div class="teste">
+                <div class="test-title">[ FREQUENCIA CARDIACA (PULSO) ]</div>
+                <div class="test-value">Valor: ${testePulso.valor} bpm</div>
+                <div class="test-classification">Classificacao: ${classificacao}</div>
+        `;
+        
+        if (recomendacoes.length > 0) {
+            conteudoImpressao += `<div class="recomendacoes">`;
+            conteudoImpressao += `<div class="recomendacoes-title">Recomendacoes:</div>`;
+            for (let i = 0; i < recomendacoes.length; i++) {
+                conteudoImpressao += `<div class="recomendacoes-item">→ ${recomendacoes[i]}</div>`;
+            }
+            conteudoImpressao += `</div>`;
+        }
+        
+        conteudoImpressao += `</div>`;
+    }
+    
+    const agora = new Date();
+    conteudoImpressao += `
+            <div class="divider"></div>
+            
+            <div class="atencao">
+                ATENCAO: Esta informacao e fornecida para orientacao<br>
+                e nao substitui a consulta medica.
+            </div>
+            
+            <div class="footer">
+                Documento gerado: ${agora.toLocaleDateString('pt-BR')} ${agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}<br>
+                Souza Farma - Cuidando da sua saude, economia e preco baixo
+            </div>
+        </body>
+        </html>
+    `;
+    
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(conteudoImpressao);
+    printWindow.document.close();
+    
+    printWindow.onload = function() {
+        setTimeout(() => {
+            printWindow.print();
+            setTimeout(() => {
+                printWindow.close();
+            }, 500);
+        }, 250);
+    };
+    
+    mostrarNotificacao('Preparando impressao termica...');
+}
 
         function gerarPDFCombinado(clienteId, dataString) {
             const cliente = clientes.find(c => c.id === clienteId);
