@@ -4010,18 +4010,22 @@
     const horaFormatada = agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
     const idadeCliente = cliente.idade ? `${cliente.idade} anos` : '';
     
-    let mensagem = `*SOUZA FARMA - Farmacia do Trabalhador*\n`;
+    let mensagem = `*═══════════════════════════════════════*\n`;
+    mensagem += `*     SOUZA FARMA - FARMACIA DO TRABALHADOR     *\n`;
+    mensagem += `*═══════════════════════════════════════*\n\n`;
     mensagem += `CNPJ: 45.856.880/0001-30\n`;
-    mensagem += `Av. Jose Sarney nº 06, Qd 03 - Bom Jesus - Sao Luis/MA\n`;
+    mensagem += `Av. Jose Sarney n 06, Qd 03 - Bom Jesus\n`;
+    mensagem += `Sao Luis/MA\n`;
     mensagem += `Tel: (98) 98628-7296\n\n`;
-    mensagem += `----------------------------------------\n\n`;
-    mensagem += `*RESULTADOS DOS TESTES*\n\n`;
-    mensagem += `*Cliente:* ${cliente.nome}\n`;
-    mensagem += `*Idade:* ${idadeCliente}\n`;
-    mensagem += `*Telefone:* ${cliente.telefone}\n`;
-    mensagem += `*Data:* ${dataFormatada}\n`;
-    mensagem += `*Hora:* ${horaFormatada}\n\n`;
-    mensagem += `----------------------------------------\n\n`;
+    mensagem += `*─────────────────────────────────────────*\n\n`;
+    mensagem += `*           RESULTADOS DOS TESTES           *\n\n`;
+    mensagem += `*─────────────────────────────────────────*\n\n`;
+    mensagem += `*CLIENTE:* ${cliente.nome}\n`;
+    mensagem += `*IDADE:* ${idadeCliente}\n`;
+    mensagem += `*TELEFONE:* ${cliente.telefone}\n`;
+    mensagem += `*DATA:* ${dataFormatada}\n`;
+    mensagem += `*HORA:* ${horaFormatada}\n\n`;
+    mensagem += `*─────────────────────────────────────────*\n\n`;
     
     function extractCurrentRecommendations(elementId) {
         const msgElement = document.getElementById(elementId);
@@ -4030,12 +4034,14 @@
         const recDiv = msgElement.querySelector('.recomendacoes-automaticas');
         if (!recDiv) return '';
         
-        let result = `\n📋 *RECOMENDACOES:*\n`;
+        let result = `\n*▸▸▸ RECOMENDACOES ◂◂◂*\n`;
+        result += `*─────────────────────────────────────────*\n`;
         const items = recDiv.querySelectorAll('li');
         for (let i = 0; i < items.length; i++) {
             const text = items[i].textContent.trim();
-            if (text) result += `   ➜ ${text}\n`;
+            if (text) result += `  *•* ${text}\n`;
         }
+        result += `*─────────────────────────────────────────*\n`;
         return result;
     }
     
@@ -4052,11 +4058,13 @@
         const glicemia = document.getElementById('glicemia').value;
         const classificacao = extractClassification('textoGlicemia');
         
-        mensagem += `*🩸 TESTE DE GLICEMIA*\n`;
-        mensagem += `   📊 Valor: ${glicemia} mg/dL\n`;
-        mensagem += `   ═══════════════════════════════\n`;
-        mensagem += `   *🔴 RESULTADO: ${classificacao}*\n`;
-        mensagem += `   ═══════════════════════════════\n`;
+        mensagem += `*┌───────────────────────────────────────┐*\n`;
+        mensagem += `*│         TESTE DE GLICEMIA            │*\n`;
+        mensagem += `*├───────────────────────────────────────┤*\n`;
+        mensagem += `*│  VALOR:* *${glicemia} mg/dL*                 │*\n`;
+        mensagem += `*├───────────────────────────────────────┤*\n`;
+        mensagem += `*│  >>> RESULTADO: ${classificacao} <<<  │*\n`;
+        mensagem += `*└───────────────────────────────────────┘*\n`;
         
         const recs = extractCurrentRecommendations('mensagemGlicemia');
         if (recs) mensagem += recs;
@@ -4072,11 +4080,13 @@
         if (sistolica && diastolica) {
             const classificacao = extractClassification('textoPressao');
             
-            mensagem += `*❤️ TESTE DE PRESSAO ARTERIAL*\n`;
-            mensagem += `   📊 Valor: ${sistolica}/${diastolica} mmHg\n`;
-            mensagem += `   ═══════════════════════════════\n`;
-            mensagem += `   *🔴 RESULTADO: ${classificacao}*\n`;
-            mensagem += `   ═══════════════════════════════\n`;
+            mensagem += `*┌───────────────────────────────────────┐*\n`;
+            mensagem += `*│      TESTE DE PRESSAO ARTERIAL       │*\n`;
+            mensagem += `*├───────────────────────────────────────┤*\n`;
+            mensagem += `*│  VALOR:* *${sistolica}/${diastolica} mmHg*              │*\n`;
+            mensagem += `*├───────────────────────────────────────┤*\n`;
+            mensagem += `*│  >>> RESULTADO: ${classificacao} <<<  │*\n`;
+            mensagem += `*└───────────────────────────────────────┘*\n`;
             
             const recs = extractCurrentRecommendations('mensagemPressao');
             if (recs) mensagem += recs;
@@ -4086,11 +4096,13 @@
         if (pulso) {
             const classificacao = extractClassification('textoPulso');
             
-            mensagem += `*💓 FREQUENCIA CARDIACA (PULSO)*\n`;
-            mensagem += `   📊 Valor: ${pulso} bpm\n`;
-            mensagem += `   ═══════════════════════════════\n`;
-            mensagem += `   *🔴 RESULTADO: ${classificacao}*\n`;
-            mensagem += `   ═══════════════════════════════\n`;
+            mensagem += `*┌───────────────────────────────────────┐*\n`;
+            mensagem += `*│    FREQUENCIA CARDIACA (PULSO)       │*\n`;
+            mensagem += `*├───────────────────────────────────────┤*\n`;
+            mensagem += `*│  VALOR:* *${pulso} bpm*                        │*\n`;
+            mensagem += `*├───────────────────────────────────────┤*\n`;
+            mensagem += `*│  >>> RESULTADO: ${classificacao} <<<  │*\n`;
+            mensagem += `*└───────────────────────────────────────┘*\n`;
             
             const recs = extractCurrentRecommendations('mensagemPulso');
             if (recs) mensagem += recs;
@@ -4098,10 +4110,13 @@
         }
     }
     
-    mensagem += `----------------------------------------\n\n`;
-    mensagem += `⚠️ *ATENCAO:* Esta informacao e fornecida para orientacao e nao substitui a consulta medica.\n\n`;
-    mensagem += `📄 Gerado em: ${agora.toLocaleDateString('pt-BR')} as ${agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}\n`;
-    mensagem += `💊 *Souza Farma - Cuidando da sua saude, economia e preco baixo*`;
+    mensagem += `*═══════════════════════════════════════*\n\n`;
+    mensagem += `*⚠️ ATENCAO:* Esta informacao e fornecida para orientacao\n`;
+    mensagem += `e nao substitui a consulta medica.\n\n`;
+    mensagem += `*─────────────────────────────────────────*\n`;
+    mensagem += `Gerado em: ${agora.toLocaleDateString('pt-BR')} as ${agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}\n`;
+    mensagem += `*Souza Farma - Cuidando da sua saude, economia e preco baixo*\n`;
+    mensagem += `*═══════════════════════════════════════*`;
     
     const mensagemCodificada = encodeURIComponent(mensagem);
     
@@ -4111,7 +4126,7 @@
     } else if (telefoneCliente.length === 10) {
         telefoneCliente = '55' + telefoneCliente;
     } else if (!telefoneCliente.startsWith('55') && telefoneCliente.length === 13) {
-        // já tem 55
+        // already has 55
     } else {
         telefoneCliente = '55' + telefoneCliente;
     }
@@ -5025,18 +5040,22 @@
     const dataFormatada = dataExata.toLocaleDateString('pt-BR');
     const horaFormatada = dataExata.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
     
-    let mensagem = `*SOUZA FARMA - Farmacia do Trabalhador*\n`;
+    let mensagem = `*═══════════════════════════════════════*\n`;
+    mensagem += `*     SOUZA FARMA - FARMACIA DO TRABALHADOR     *\n`;
+    mensagem += `*═══════════════════════════════════════*\n\n`;
     mensagem += `CNPJ: 45.856.880/0001-30\n`;
-    mensagem += `Av. Jose Sarney n 06, Qd 03 - Bom Jesus - Sao Luis/MA\n`;
+    mensagem += `Av. Jose Sarney n 06, Qd 03 - Bom Jesus\n`;
+    mensagem += `Sao Luis/MA\n`;
     mensagem += `Tel: (98) 98628-7296\n\n`;
-    mensagem += `----------------------------------------\n\n`;
-    mensagem += `*RESULTADOS DOS TESTES*\n\n`;
-    mensagem += `*Cliente:* ${cliente.nome}\n`;
-    mensagem += `*Idade:* ${idadeTexto}\n`;
-    mensagem += `*Telefone:* ${cliente.telefone}\n`;
-    mensagem += `*Data:* ${dataFormatada}\n`;
-    mensagem += `*Hora:* ${horaFormatada}\n\n`;
-    mensagem += `----------------------------------------\n\n`;
+    mensagem += `*─────────────────────────────────────────*\n\n`;
+    mensagem += `*           RESULTADOS DOS TESTES           *\n\n`;
+    mensagem += `*─────────────────────────────────────────*\n\n`;
+    mensagem += `*CLIENTE:* ${cliente.nome}\n`;
+    mensagem += `*IDADE:* ${idadeTexto}\n`;
+    mensagem += `*TELEFONE:* ${cliente.telefone}\n`;
+    mensagem += `*DATA:* ${dataFormatada}\n`;
+    mensagem += `*HORA:* ${horaFormatada}\n\n`;
+    mensagem += `*─────────────────────────────────────────*\n\n`;
     
     function extractRecommendations(htmlMessage) {
         if (!htmlMessage) return '';
@@ -5044,14 +5063,16 @@
         temp.innerHTML = htmlMessage;
         const recDiv = temp.querySelector('.recomendacoes-automaticas');
         if (!recDiv) return '';
-        let result = `\n*RECOMENDACOES:*\n`;
+        let result = `\n*▸▸▸ RECOMENDACOES ◂◂◂*\n`;
+        result += `*─────────────────────────────────────────*\n`;
         const items = recDiv.querySelectorAll('li');
         for (let i = 0; i < items.length; i++) {
             const itemText = items[i].textContent.trim();
             if (itemText) {
-                result += `  • ${itemText}\n`;
+                result += `  *•* ${itemText}\n`;
             }
         }
+        result += `*─────────────────────────────────────────*\n`;
         return result;
     }
     
@@ -5072,11 +5093,13 @@
     // Glicemia
     if (testeGlicemia) {
         const classificacao = extractClassification(testeGlicemia.resultado);
-        mensagem += `*[ TESTE DE GLICEMIA ]*\n`;
-        mensagem += `  *Valor:* ${extractValue(testeGlicemia)}\n`;
-        mensagem += `  ----------------------------------------\n`;
-        mensagem += `  *>>> RESULTADO: ${classificacao} <<<*\n`;
-        mensagem += `  ----------------------------------------\n`;
+        mensagem += `*┌───────────────────────────────────────┐*\n`;
+        mensagem += `*│         TESTE DE GLICEMIA            │*\n`;
+        mensagem += `*├───────────────────────────────────────┤*\n`;
+        mensagem += `*│  VALOR:* *${extractValue(testeGlicemia)}*      │*\n`;
+        mensagem += `*├───────────────────────────────────────┤*\n`;
+        mensagem += `*│  >>> RESULTADO: ${classificacao} <<<  │*\n`;
+        mensagem += `*└───────────────────────────────────────┘*\n`;
         const recs = extractRecommendations(testeGlicemia.mensagem);
         if (recs) mensagem += recs;
         mensagem += `\n`;
@@ -5085,11 +5108,13 @@
     // Pressao Arterial
     if (testePressao) {
         const classificacao = extractClassification(testePressao.resultado);
-        mensagem += `*[ TESTE DE PRESSAO ARTERIAL ]*\n`;
-        mensagem += `  *Valor:* ${extractValue(testePressao)}\n`;
-        mensagem += `  ----------------------------------------\n`;
-        mensagem += `  *>>> RESULTADO: ${classificacao} <<<*\n`;
-        mensagem += `  ----------------------------------------\n`;
+        mensagem += `*┌───────────────────────────────────────┐*\n`;
+        mensagem += `*│      TESTE DE PRESSAO ARTERIAL       │*\n`;
+        mensagem += `*├───────────────────────────────────────┤*\n`;
+        mensagem += `*│  VALOR:* *${extractValue(testePressao)}*      │*\n`;
+        mensagem += `*├───────────────────────────────────────┤*\n`;
+        mensagem += `*│  >>> RESULTADO: ${classificacao} <<<  │*\n`;
+        mensagem += `*└───────────────────────────────────────┘*\n`;
         const recs = extractRecommendations(testePressao.mensagem);
         if (recs) mensagem += recs;
         mensagem += `\n`;
@@ -5098,20 +5123,25 @@
     // Pulso
     if (testePulso) {
         const classificacao = extractClassification(testePulso.resultado);
-        mensagem += `*[ FREQUENCIA CARDIACA (PULSO) ]*\n`;
-        mensagem += `  *Valor:* ${extractValue(testePulso)}\n`;
-        mensagem += `  ----------------------------------------\n`;
-        mensagem += `  *>>> RESULTADO: ${classificacao} <<<*\n`;
-        mensagem += `  ----------------------------------------\n`;
+        mensagem += `*┌───────────────────────────────────────┐*\n`;
+        mensagem += `*│    FREQUENCIA CARDIACA (PULSO)       │*\n`;
+        mensagem += `*├───────────────────────────────────────┤*\n`;
+        mensagem += `*│  VALOR:* *${extractValue(testePulso)}*         │*\n`;
+        mensagem += `*├───────────────────────────────────────┤*\n`;
+        mensagem += `*│  >>> RESULTADO: ${classificacao} <<<  │*\n`;
+        mensagem += `*└───────────────────────────────────────┘*\n`;
         const recs = extractRecommendations(testePulso.mensagem);
         if (recs) mensagem += recs;
         mensagem += `\n`;
     }
     
-    mensagem += `----------------------------------------\n\n`;
-    mensagem += `*ATENCAO:* Esta informacao e fornecida para orientacao e nao substitui a consulta medica.\n\n`;
+    mensagem += `*═══════════════════════════════════════*\n\n`;
+    mensagem += `*⚠️ ATENCAO:* Esta informacao e fornecida para orientacao\n`;
+    mensagem += `e nao substitui a consulta medica.\n\n`;
+    mensagem += `*─────────────────────────────────────────*\n`;
     mensagem += `Gerado em: ${new Date().toLocaleDateString('pt-BR')} as ${new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}\n`;
-    mensagem += `*Souza Farma - Cuidando da sua saude, economia e preco baixo*`;
+    mensagem += `*Souza Farma - Cuidando da sua saude, economia e preco baixo*\n`;
+    mensagem += `*═══════════════════════════════════════*`;
     
     const mensagemCodificada = encodeURIComponent(mensagem);
     
