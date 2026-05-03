@@ -4538,8 +4538,8 @@
                     
                     body {
                         font-family: 'Courier New', monospace;
-                        font-size: 11px;
-                        line-height: 1.3;
+                        font-size: 12px;
+                        line-height: 1.4;
                         width: 80mm;
                         margin: 2mm;
                         padding: 0;
@@ -4553,33 +4553,35 @@
                         text-align: center;
                         margin-bottom: 8px;
                         padding-bottom: 5px;
-                        border-bottom: 2px solid black;
+                        border-bottom: 3px solid black;
                     }
                     
                     .title {
-                        font-size: 16px;
+                        font-size: 18px;
                         font-weight: bold;
                         margin: 2px 0;
                         text-transform: uppercase;
+                        letter-spacing: 1px;
                     }
                     
                     .subtitle {
-                        font-size: 10px;
+                        font-size: 11px;
+                        font-weight: bold;
                         margin: 2px 0;
                     }
                     
                     .divider {
-                        border-bottom: 1px dashed black;
+                        border-bottom: 1px solid black;
                         margin: 5px 0;
                     }
                     
                     .divider-double {
-                        border-bottom: 2px solid black;
+                        border-bottom: 3px solid black;
                         margin: 5px 0;
                     }
                     
                     .section-title {
-                        font-size: 13px;
+                        font-size: 14px;
                         font-weight: bold;
                         margin: 8px 0 4px 0;
                         text-align: center;
@@ -4588,93 +4590,94 @@
                     
                     .client-info {
                         margin: 8px 0;
-                        padding: 5px;
-                        border: 1px solid black;
+                        padding: 6px;
+                        border: 2px solid black;
+                        background-color: #f5f5f5;
                     }
                     
                     .client-info p {
-                        margin: 2px 0;
-                        font-size: 10px;
+                        margin: 3px 0;
+                        font-size: 12px;
+                        font-weight: bold;
                     }
                     
                     .teste {
-                        margin: 8px 0;
-                        padding: 5px;
-                        border: 1px solid #999;
+                        margin: 10px 0;
+                        padding: 6px;
+                        border: 1px solid black;
                     }
                     
                     .test-title {
-                        font-size: 12px;
+                        font-size: 13px;
                         font-weight: bold;
-                        margin-bottom: 5px;
-                        background-color: #f0f0f0;
-                        padding: 3px 5px;
+                        margin-bottom: 6px;
+                        background-color: #d0d0d0;
+                        padding: 4px 5px;
                         text-align: center;
+                        border: 1px solid black;
                     }
                     
                     .test-value {
-                        margin: 4px 0;
+                        margin: 5px 0;
                         font-size: 12px;
                     }
                     
                     .test-value-number {
-                        font-size: 16px;
+                        font-size: 18px;
                         font-weight: bold;
-                        color: #000;
+                        color: black;
+                        background-color: #e8e8e8;
+                        padding: 2px 6px;
+                        display: inline-block;
                     }
                     
                     .test-classification {
                         margin: 6px 0;
                         font-weight: bold;
-                        font-size: 13px;
+                        font-size: 14px;
                         text-align: center;
-                        background-color: #e0e0e0;
-                        padding: 5px;
-                        border-radius: 3px;
-                    }
-                    
-                    .resultado-destaque {
-                        font-size: 15px;
-                        font-weight: bold;
-                        text-align: center;
-                        margin: 5px 0;
-                        padding: 3px;
-                        background-color: #f5f5f5;
+                        background-color: #d0d0d0;
+                        padding: 6px;
+                        border: 1px solid black;
                     }
                     
                     .recomendacoes {
-                        margin: 6px 0 0 0;
-                        padding: 5px;
-                        background-color: #f9f9f9;
-                        border-left: 3px solid #333;
+                        margin: 8px 0 0 0;
+                        padding: 6px;
+                        background-color: #e8e8e8;
+                        border: 1px solid black;
                     }
                     
                     .recomendacoes-title {
                         font-weight: bold;
-                        margin-bottom: 4px;
-                        font-size: 10px;
+                        margin-bottom: 5px;
+                        font-size: 11px;
+                        text-decoration: underline;
                     }
                     
                     .recomendacoes-item {
-                        margin: 3px 0 3px 10px;
-                        font-size: 9px;
+                        margin: 4px 0 4px 12px;
+                        font-size: 10px;
+                        font-weight: bold;
                     }
                     
                     .footer {
-                        margin-top: 10px;
-                        padding-top: 5px;
-                        border-top: 2px solid black;
+                        margin-top: 12px;
+                        padding-top: 6px;
+                        border-top: 3px solid black;
                         text-align: center;
-                        font-size: 9px;
+                        font-size: 10px;
+                        font-weight: bold;
                     }
                     
                     .atencao {
-                        margin: 8px 0;
-                        padding: 5px;
-                        background-color: #f0f0f0;
+                        margin: 10px 0;
+                        padding: 6px;
+                        background-color: black;
+                        color: white;
                         border: 1px solid black;
                         text-align: center;
-                        font-size: 9px;
+                        font-size: 10px;
                         font-weight: bold;
                     }
                     
@@ -4702,11 +4705,11 @@
             <div class="section-title">RESULTADOS DOS TESTES</div>
             
             <div class="client-info">
-                <p><span class="bold">Cliente:</span> ${cliente.nome}</p>
-                <p><span class="bold">Idade:</span> ${idadeTexto}</p>
-                <p><span class="bold">Telefone:</span> ${cliente.telefone}</p>
-                <p><span class="bold">Data:</span> ${dataFormatada}</p>
-                <p><span class="bold">Hora:</span> ${horaFormatada}</p>
+                <p>>>> CLIENTE: ${cliente.nome} <<<</p>
+                <p>>>> IDADE: ${idadeTexto} <<<</p>
+                <p>>>> TELEFONE: ${cliente.telefone} <<<</p>
+                <p>>>> DATA: ${dataFormatada} <<<</p>
+                <p>>>> HORA: ${horaFormatada} <<<</p>
             </div>
             
             <div class="divider"></div>
@@ -4719,16 +4722,16 @@
         
         conteudoImpressao += `
             <div class="teste">
-                <div class="test-title">TESTE DE GLICEMIA</div>
-                <div class="test-value"><span class="bold">Valor:</span> <span class="test-value-number">${testeGlicemia.valor} mg/dL</span></div>
-                <div class="test-classification">RESULTADO: ${classificacao}</div>
+                <div class="test-title">>>> TESTE DE GLICEMIA <<<</div>
+                <div class="test-value"><span class="bold">VALOR:</span> <span class="test-value-number">${testeGlicemia.valor} mg/dL</span></div>
+                <div class="test-classification">>>> RESULTADO: ${classificacao} <<<</div>
         `;
         
         if (recomendacoes.length > 0) {
             conteudoImpressao += `<div class="recomendacoes">`;
-            conteudoImpressao += `<div class="recomendacoes-title">RECOMENDACOES:</div>`;
+            conteudoImpressao += `<div class="recomendacoes-title">>>> RECOMENDACOES <<<</div>`;
             for (let i = 0; i < recomendacoes.length; i++) {
-                conteudoImpressao += `<div class="recomendacoes-item">- ${recomendacoes[i]}</div>`;
+                conteudoImpressao += `<div class="recomendacoes-item">• ${recomendacoes[i]}</div>`;
             }
             conteudoImpressao += `</div>`;
         }
@@ -4743,16 +4746,16 @@
         
         conteudoImpressao += `
             <div class="teste">
-                <div class="test-title">TESTE DE PRESSAO ARTERIAL</div>
-                <div class="test-value"><span class="bold">Valor:</span> <span class="test-value-number">${testePressao.valor} mmHg</span></div>
-                <div class="test-classification">RESULTADO: ${classificacao}</div>
+                <div class="test-title">>>> TESTE DE PRESSAO ARTERIAL <<<</div>
+                <div class="test-value"><span class="bold">VALOR:</span> <span class="test-value-number">${testePressao.valor} mmHg</span></div>
+                <div class="test-classification">>>> RESULTADO: ${classificacao} <<<</div>
         `;
         
         if (recomendacoes.length > 0) {
             conteudoImpressao += `<div class="recomendacoes">`;
-            conteudoImpressao += `<div class="recomendacoes-title">RECOMENDACOES:</div>`;
+            conteudoImpressao += `<div class="recomendacoes-title">>>> RECOMENDACOES <<<</div>`;
             for (let i = 0; i < recomendacoes.length; i++) {
-                conteudoImpressao += `<div class="recomendacoes-item">- ${recomendacoes[i]}</div>`;
+                conteudoImpressao += `<div class="recomendacoes-item">• ${recomendacoes[i]}</div>`;
             }
             conteudoImpressao += `</div>`;
         }
@@ -4767,16 +4770,16 @@
         
         conteudoImpressao += `
             <div class="teste">
-                <div class="test-title">FREQUENCIA CARDIACA (PULSO)</div>
-                <div class="test-value"><span class="bold">Valor:</span> <span class="test-value-number">${testePulso.valor} bpm</span></div>
-                <div class="test-classification">RESULTADO: ${classificacao}</div>
+                <div class="test-title">>>> FREQUENCIA CARDIACA (PULSO) <<<</div>
+                <div class="test-value"><span class="bold">VALOR:</span> <span class="test-value-number">${testePulso.valor} bpm</span></div>
+                <div class="test-classification">>>> RESULTADO: ${classificacao} <<<</div>
         `;
         
         if (recomendacoes.length > 0) {
             conteudoImpressao += `<div class="recomendacoes">`;
-            conteudoImpressao += `<div class="recomendacoes-title">RECOMENDACOES:</div>`;
+            conteudoImpressao += `<div class="recomendacoes-title">>>> RECOMENDACOES <<<</div>`;
             for (let i = 0; i < recomendacoes.length; i++) {
-                conteudoImpressao += `<div class="recomendacoes-item">- ${recomendacoes[i]}</div>`;
+                conteudoImpressao += `<div class="recomendacoes-item">• ${recomendacoes[i]}</div>`;
             }
             conteudoImpressao += `</div>`;
         }
@@ -4789,8 +4792,8 @@
             <div class="divider"></div>
             
             <div class="atencao">
-                ATENCAO: Esta informacao e fornecida para orientacao<br>
-                e nao substitui a consulta medica.
+                >>> ATENCAO: Esta informacao e fornecida para orientacao <<<<br>
+                >>> e nao substitui a consulta medica. <<<
             </div>
             
             <div class="footer">
@@ -5022,17 +5025,17 @@
     const dataFormatada = dataExata.toLocaleDateString('pt-BR');
     const horaFormatada = dataExata.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
     
-    let mensagem = `SOUZA FARMA - Farmacia do Trabalhador\n`;
+    let mensagem = `*SOUZA FARMA - Farmacia do Trabalhador*\n`;
     mensagem += `CNPJ: 45.856.880/0001-30\n`;
     mensagem += `Av. Jose Sarney n 06, Qd 03 - Bom Jesus - Sao Luis/MA\n`;
     mensagem += `Tel: (98) 98628-7296\n\n`;
     mensagem += `----------------------------------------\n\n`;
-    mensagem += `RESULTADOS DOS TESTES\n\n`;
-    mensagem += `Cliente: ${cliente.nome}\n`;
-    mensagem += `Idade: ${idadeTexto}\n`;
-    mensagem += `Telefone: ${cliente.telefone}\n`;
-    mensagem += `Data: ${dataFormatada}\n`;
-    mensagem += `Hora: ${horaFormatada}\n\n`;
+    mensagem += `*RESULTADOS DOS TESTES*\n\n`;
+    mensagem += `*Cliente:* ${cliente.nome}\n`;
+    mensagem += `*Idade:* ${idadeTexto}\n`;
+    mensagem += `*Telefone:* ${cliente.telefone}\n`;
+    mensagem += `*Data:* ${dataFormatada}\n`;
+    mensagem += `*Hora:* ${horaFormatada}\n\n`;
     mensagem += `----------------------------------------\n\n`;
     
     function extractRecommendations(htmlMessage) {
@@ -5041,12 +5044,12 @@
         temp.innerHTML = htmlMessage;
         const recDiv = temp.querySelector('.recomendacoes-automaticas');
         if (!recDiv) return '';
-        let result = `\n[RECOMENDACOES]\n`;
+        let result = `\n*RECOMENDACOES:*\n`;
         const items = recDiv.querySelectorAll('li');
         for (let i = 0; i < items.length; i++) {
             const itemText = items[i].textContent.trim();
             if (itemText) {
-                result += `  - ${itemText}\n`;
+                result += `  • ${itemText}\n`;
             }
         }
         return result;
@@ -5069,10 +5072,10 @@
     // Glicemia
     if (testeGlicemia) {
         const classificacao = extractClassification(testeGlicemia.resultado);
-        mensagem += `[ TESTE DE GLICEMIA ]\n`;
-        mensagem += `  Valor: ${extractValue(testeGlicemia)}\n`;
+        mensagem += `*[ TESTE DE GLICEMIA ]*\n`;
+        mensagem += `  *Valor:* ${extractValue(testeGlicemia)}\n`;
         mensagem += `  ----------------------------------------\n`;
-        mensagem += `  >>> RESULTADO: ${classificacao} <<<\n`;
+        mensagem += `  *>>> RESULTADO: ${classificacao} <<<*\n`;
         mensagem += `  ----------------------------------------\n`;
         const recs = extractRecommendations(testeGlicemia.mensagem);
         if (recs) mensagem += recs;
@@ -5082,10 +5085,10 @@
     // Pressao Arterial
     if (testePressao) {
         const classificacao = extractClassification(testePressao.resultado);
-        mensagem += `[ TESTE DE PRESSAO ARTERIAL ]\n`;
-        mensagem += `  Valor: ${extractValue(testePressao)}\n`;
+        mensagem += `*[ TESTE DE PRESSAO ARTERIAL ]*\n`;
+        mensagem += `  *Valor:* ${extractValue(testePressao)}\n`;
         mensagem += `  ----------------------------------------\n`;
-        mensagem += `  >>> RESULTADO: ${classificacao} <<<\n`;
+        mensagem += `  *>>> RESULTADO: ${classificacao} <<<*\n`;
         mensagem += `  ----------------------------------------\n`;
         const recs = extractRecommendations(testePressao.mensagem);
         if (recs) mensagem += recs;
@@ -5095,10 +5098,10 @@
     // Pulso
     if (testePulso) {
         const classificacao = extractClassification(testePulso.resultado);
-        mensagem += `[ FREQUENCIA CARDIACA (PULSO) ]\n`;
-        mensagem += `  Valor: ${extractValue(testePulso)}\n`;
+        mensagem += `*[ FREQUENCIA CARDIACA (PULSO) ]*\n`;
+        mensagem += `  *Valor:* ${extractValue(testePulso)}\n`;
         mensagem += `  ----------------------------------------\n`;
-        mensagem += `  >>> RESULTADO: ${classificacao} <<<\n`;
+        mensagem += `  *>>> RESULTADO: ${classificacao} <<<*\n`;
         mensagem += `  ----------------------------------------\n`;
         const recs = extractRecommendations(testePulso.mensagem);
         if (recs) mensagem += recs;
@@ -5106,9 +5109,9 @@
     }
     
     mensagem += `----------------------------------------\n\n`;
-    mensagem += `ATENCAO: Esta informacao e fornecida para orientacao e nao substitui a consulta medica.\n\n`;
+    mensagem += `*ATENCAO:* Esta informacao e fornecida para orientacao e nao substitui a consulta medica.\n\n`;
     mensagem += `Gerado em: ${new Date().toLocaleDateString('pt-BR')} as ${new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}\n`;
-    mensagem += `Souza Farma - Cuidando da sua saude, economia e preco baixo`;
+    mensagem += `*Souza Farma - Cuidando da sua saude, economia e preco baixo*`;
     
     const mensagemCodificada = encodeURIComponent(mensagem);
     
