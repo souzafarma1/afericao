@@ -4090,7 +4090,7 @@
         const recomendacoes = extractCurrentRecommendations('mensagemGlicemia');
         
         mensagem += `*TESTE DE GLICEMIA*\n`;
-        mensagem += `*Valor:* ${glicemia} mg/dL\n`;
+        mensagem += `*Valor:* *${glicemia} mg/dL*\n`;
         mensagem += `*RESULTADO:* ${classificacao}\n`;
         
         if (recomendacoes.length > 0) {
@@ -4113,7 +4113,7 @@
             const recomendacoes = extractCurrentRecommendations('mensagemPressao');
             
             mensagem += `*TESTE DE PRESSAO ARTERIAL*\n`;
-            mensagem += `*Valor:* ${sistolica}/${diastolica} mmHg\n`;
+            mensagem += `*Valor:* *${sistolica}/${diastolica} mmHg*\n`;
             mensagem += `*RESULTADO:* ${classificacao}\n`;
             
             if (recomendacoes.length > 0) {
@@ -4131,7 +4131,7 @@
             const recomendacoes = extractCurrentRecommendations('mensagemPulso');
             
             mensagem += `*FREQUENCIA CARDIACA (PULSO)*\n`;
-            mensagem += `*Valor:* ${pulso} bpm\n`;
+            mensagem += `*Valor:* *${pulso} bpm*\n`;
             mensagem += `*RESULTADO:* ${classificacao}\n`;
             
             if (recomendacoes.length > 0) {
@@ -4272,7 +4272,7 @@
         }
 
         // Funções para testes individuais
-       function enviarWhatsAppTeste() {
+      function enviarWhatsAppTeste() {
     // Extrair informações do modal
     const conteudoModal = document.getElementById('testeModalConteudo');
     const textoCompleto = conteudoModal.innerText;
@@ -4315,8 +4315,16 @@
     mensagem += `Tel: (98) 98628-7296\n\n`;
     mensagem += `*RESULTADOS DOS TESTES*\n\n`;
     
-    // Adiciona o conteúdo principal
-    mensagem += textoCompleto;
+    // Adiciona o conteúdo principal e destaca os números
+    let textoProcessado = textoCompleto;
+    // Destaca números de pressão (ex: 159/109 mmHg)
+    textoProcessado = textoProcessado.replace(/(\d+\/\d+\s*mmHg)/g, '*$1*');
+    // Destaca números de glicemia (ex: 95 mg/dL)
+    textoProcessado = textoProcessado.replace(/(\d+\s*mg\/dL)/g, '*$1*');
+    // Destaca números de pulso (ex: 90 bpm)
+    textoProcessado = textoProcessado.replace(/(\d+\s*bpm)/g, '*$1*');
+    
+    mensagem += textoProcessado;
     
     // Garante que o rodapé tenha a observação
     if (!textoCompleto.includes('ATENCAO:')) {
@@ -5138,7 +5146,7 @@
         const recomendacoes = extractRecommendations(testeGlicemia.mensagem);
         
         mensagem += `*TESTE DE GLICEMIA*\n`;
-        mensagem += `*Valor:* ${testeGlicemia.valor} mg/dL\n`;
+        mensagem += `*Valor:* *${testeGlicemia.valor} mg/dL*\n`;
         mensagem += `*RESULTADO:* ${classificacao}\n`;
         
         if (recomendacoes.length > 0) {
@@ -5156,7 +5164,7 @@
         const recomendacoes = extractRecommendations(testePressao.mensagem);
         
         mensagem += `*TESTE DE PRESSAO ARTERIAL*\n`;
-        mensagem += `*Valor:* ${testePressao.valor} mmHg\n`;
+        mensagem += `*Valor:* *${testePressao.valor} mmHg*\n`;
         mensagem += `*RESULTADO:* ${classificacao}\n`;
         
         if (recomendacoes.length > 0) {
@@ -5174,7 +5182,7 @@
         const recomendacoes = extractRecommendations(testePulso.mensagem);
         
         mensagem += `*FREQUENCIA CARDIACA (PULSO)*\n`;
-        mensagem += `*Valor:* ${testePulso.valor} bpm\n`;
+        mensagem += `*Valor:* *${testePulso.valor} bpm*\n`;
         mensagem += `*RESULTADO:* ${classificacao}\n`;
         
         if (recomendacoes.length > 0) {
