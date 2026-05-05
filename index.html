@@ -3415,7 +3415,7 @@
         }
 
         // 1. FUNÇÃO DE IMPRESSÃO TÉRMICA OTIMIZADA
-        function imprimirTermica() {
+       function imprimirTermica() {
     if (!clienteSelecionadoId) {
         mostrarNotificacao('Selecione um cliente primeiro!', 'error');
         document.getElementById('buscaCliente').focus();
@@ -3473,16 +3473,17 @@
                 @media print {
                     @page {
                         margin: 0mm;
-                        size: 80mm auto;
+                        size: 80mm auto; /* Largura padrão para térmica */
                     }
                     
                     body {
                         font-family: 'Courier New', monospace;
-                        font-size: 12px;
+                        font-size: 11px;
                         line-height: 1.4;
-                        width: 80mm;
-                        margin: 2mm;
-                        padding: 0;
+                        width: 100%;
+                        max-width: 80mm;
+                        margin: 0mm;
+                        padding: 2mm 2mm 2mm 2mm; /* Reduzi a margem esquerda */
                         color: black;
                         background: white;
                         -webkit-print-color-adjust: exact;
@@ -3504,7 +3505,7 @@
                     }
                     
                     .subtitle {
-                        font-size: 11px;
+                        font-size: 10px;
                         margin: 2px 0;
                     }
                     
@@ -3519,52 +3520,71 @@
                     }
                     
                     .section-title {
-                        font-size: 14px;
+                        font-size: 13px;
                         font-weight: bold;
                         margin: 8px 0 4px 0;
                         text-align: center;
                         text-decoration: underline;
                     }
                     
+                    /* ESTILO REFORÇADO PARA OS DADOS DO CLIENTE (MAIS ESCURO) */
                     .client-info {
                         margin: 8px 0;
-                        padding: 5px;
+                        padding: 6px;
                         border: 1px solid black;
+                        background-color: #e0e0e0; /* Fundo mais escuro */
+                        color: black;
+                        font-weight: bold;
                     }
                     
                     .client-info p {
                         margin: 2px 0;
                         font-size: 11px;
+                        font-weight: bold;
+                        color: black;
                     }
                     
                     .teste {
                         margin: 8px 0;
                         padding: 5px;
-                        border: 1px solid #999;
+                        border: 1px solid #000;
+                        background-color: white;
                     }
                     
                     .test-title {
-                        font-size: 13px;
+                        font-size: 12px;
                         font-weight: bold;
                         margin-bottom: 6px;
-                        background-color: #f0f0f0;
+                        background-color: #d0d0d0;
                         padding: 3px 5px;
                         text-align: center;
+                        border: 1px solid #000;
                     }
                     
                     .test-value {
                         margin: 4px 0;
-                        font-size: 13px;
+                        font-size: 12px;
+                    }
+                    
+                    /* DESTAQUE EM NEGRITO PARA OS NÚMEROS DOS VALORES */
+                    .test-value-number {
+                        font-size: 14px;
+                        font-weight: bold;
+                        color: #000;
+                        background-color: #f0f0f0;
+                        padding: 2px 4px;
+                        display: inline-block;
+                        border: 1px solid #aaa;
                     }
                     
                     .test-classification {
                         margin: 4px 0;
                         font-weight: bold;
-                        font-size: 14px;
+                        font-size: 13px;
                         text-align: center;
-                        background-color: #e0e0e0;
+                        background-color: #d0d0d0;
                         padding: 4px;
-                        border-radius: 3px;
+                        border-radius: 2px;
                     }
                     
                     .recomendacoes {
@@ -3577,12 +3597,14 @@
                     .recomendacoes-title {
                         font-weight: bold;
                         margin-bottom: 4px;
-                        font-size: 11px;
+                        font-size: 10px;
                     }
                     
                     .recomendacoes-item {
-                        margin: 3px 0 3px 12px;
+                        margin: 3px 0 3px 8px; /* REDUZI A MARGEM ESQUERDA PARA EVITAR CORTE */
                         font-size: 10px;
+                        word-wrap: break-word;
+                        white-space: normal;
                     }
                     
                     .footer {
@@ -3599,7 +3621,7 @@
                         background-color: #f0f0f0;
                         border: 1px solid black;
                         text-align: center;
-                        font-size: 10px;
+                        font-size: 9px;
                         font-weight: bold;
                     }
                     
@@ -3627,11 +3649,11 @@
             <div class="section-title">RESULTADOS DOS TESTES</div>
             
             <div class="client-info">
-                <p><span class="bold">Cliente:</span> ${cliente.nome}</p>
-                <p><span class="bold">Idade:</span> ${idadeCliente}</p>
-                <p><span class="bold">Telefone:</span> ${cliente.telefone}</p>
-                <p><span class="bold">Data:</span> ${dataFormatada}</p>
-                <p><span class="bold">Hora:</span> ${horaFormatada}</p>
+                <p>Cliente: ${cliente.nome}</p>
+                <p>Idade: ${idadeCliente}</p>
+                <p>Telefone: ${cliente.telefone}</p>
+                <p>Data: ${dataFormatada}</p>
+                <p>Hora: ${horaFormatada}</p>
             </div>
             
             <div class="divider"></div>
@@ -3646,7 +3668,10 @@
         conteudoImpressao += `
             <div class="teste">
                 <div class="test-title">TESTE DE GLICEMIA</div>
-                <div class="test-value"><span class="bold">Valor:</span> ${glicemia} mg/dL</div>
+                <div class="test-value">
+                    <span class="bold">Valor:</span> 
+                    <span class="test-value-number">${glicemia} mg/dL</span>
+                </div>
                 <div class="test-classification">RESULTADO: ${classificacao}</div>
         `;
         
@@ -3675,7 +3700,10 @@
             conteudoImpressao += `
                 <div class="teste">
                     <div class="test-title">TESTE DE PRESSAO ARTERIAL</div>
-                    <div class="test-value"><span class="bold">Valor:</span> ${sistolica}/${diastolica} mmHg</div>
+                    <div class="test-value">
+                        <span class="bold">Valor:</span> 
+                        <span class="test-value-number">${sistolica}/${diastolica} mmHg</span>
+                    </div>
                     <div class="test-classification">RESULTADO: ${classificacao}</div>
             `;
             
@@ -3698,7 +3726,10 @@
             conteudoImpressao += `
                 <div class="teste">
                     <div class="test-title">FREQUENCIA CARDIACA (PULSO)</div>
-                    <div class="test-value"><span class="bold">Valor:</span> ${pulso} bpm</div>
+                    <div class="test-value">
+                        <span class="bold">Valor:</span> 
+                        <span class="test-value-number">${pulso} bpm</span>
+                    </div>
                     <div class="test-classification">RESULTADO: ${classificacao}</div>
             `;
             
