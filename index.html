@@ -4068,20 +4068,20 @@
     let mensagem = '';
     
     // Cabeçalho
-    mensagem += `SOUZA FARMA\n`;
-    mensagem += `Farmacia do Trabalhador\n`;
+    mensagem += `*SOUZA FARMA*\n`;
+    mensagem += `*Farmacia do Trabalhador*\n`;
     mensagem += `CNPJ: 45.856.880/0001-30\n`;
     mensagem += `Av. Jose Sarney nº 06, Qd 03\n`;
     mensagem += `Bom Jesus - Sao Luis/MA\n`;
     mensagem += `Tel: (98) 98628-7296\n\n`;
-    mensagem += `RESULTADOS DOS TESTES\n\n`;
+    mensagem += `*RESULTADOS DOS TESTES*\n\n`;
     
     // Dados do Cliente
-    mensagem += `Cliente: ${cliente.nome}\n`;
-    mensagem += `Idade: ${idadeCliente}\n`;
-    mensagem += `Telefone: ${cliente.telefone}\n`;
-    mensagem += `Data: ${dataFormatada}\n`;
-    mensagem += `Hora: ${horaFormatada}\n\n`;
+    mensagem += `*Cliente:* ${cliente.nome}\n`;
+    mensagem += `*Idade:* ${idadeCliente}\n`;
+    mensagem += `*Telefone:* ${cliente.telefone}\n`;
+    mensagem += `*Data:* ${dataFormatada}\n`;
+    mensagem += `*Hora:* ${horaFormatada}\n\n`;
     
     // Teste de Glicemia
     if (resultadoGlicemia.style.display !== 'none') {
@@ -4089,12 +4089,12 @@
         const classificacao = extractClassification('textoGlicemia');
         const recomendacoes = extractCurrentRecommendations('mensagemGlicemia');
         
-        mensagem += `TESTE DE GLICEMIA\n`;
-        mensagem += `Valor: ${glicemia} mg/dL\n`;
-        mensagem += `RESULTADO: ${classificacao}\n`;
+        mensagem += `*TESTE DE GLICEMIA*\n`;
+        mensagem += `*Valor:* ${glicemia} mg/dL\n`;
+        mensagem += `*RESULTADO:* ${classificacao}\n`;
         
         if (recomendacoes.length > 0) {
-            mensagem += `RECOMENDACOES:\n`;
+            mensagem += `*RECOMENDACOES:*\n`;
             for (let i = 0; i < recomendacoes.length; i++) {
                 mensagem += `→ ${recomendacoes[i]}\n`;
             }
@@ -4112,12 +4112,12 @@
             const classificacao = extractClassification('textoPressao');
             const recomendacoes = extractCurrentRecommendations('mensagemPressao');
             
-            mensagem += `TESTE DE PRESSAO ARTERIAL\n`;
-            mensagem += `Valor: ${sistolica}/${diastolica} mmHg\n`;
-            mensagem += `RESULTADO: ${classificacao}\n`;
+            mensagem += `*TESTE DE PRESSAO ARTERIAL*\n`;
+            mensagem += `*Valor:* ${sistolica}/${diastolica} mmHg\n`;
+            mensagem += `*RESULTADO:* ${classificacao}\n`;
             
             if (recomendacoes.length > 0) {
-                mensagem += `RECOMENDACOES:\n`;
+                mensagem += `*RECOMENDACOES:*\n`;
                 for (let i = 0; i < recomendacoes.length; i++) {
                     mensagem += `→ ${recomendacoes[i]}\n`;
                 }
@@ -4130,12 +4130,12 @@
             const classificacao = extractClassification('textoPulso');
             const recomendacoes = extractCurrentRecommendations('mensagemPulso');
             
-            mensagem += `FREQUENCIA CARDIACA (PULSO)\n`;
-            mensagem += `Valor: ${pulso} bpm\n`;
-            mensagem += `RESULTADO: ${classificacao}\n`;
+            mensagem += `*FREQUENCIA CARDIACA (PULSO)*\n`;
+            mensagem += `*Valor:* ${pulso} bpm\n`;
+            mensagem += `*RESULTADO:* ${classificacao}\n`;
             
             if (recomendacoes.length > 0) {
-                mensagem += `RECOMENDACOES:\n`;
+                mensagem += `*RECOMENDACOES:*\n`;
                 for (let i = 0; i < recomendacoes.length; i++) {
                     mensagem += `→ ${recomendacoes[i]}\n`;
                 }
@@ -4145,10 +4145,10 @@
     }
     
     // Rodapé
-    mensagem += `ATENCAO: Esta informacao e fornecida para orientacao\n`;
+    mensagem += `*ATENCAO:* Esta informacao e fornecida para orientacao\n`;
     mensagem += `e nao substitui a consulta medica.\n\n`;
     mensagem += `Documento gerado: ${dataFormatada} ${horaFormatada}\n`;
-    mensagem += `Souza Farma - Cuidando da sua saude, economia e preco baixo`;
+    mensagem += `*Souza Farma - Cuidando da sua saude, economia e preco baixo*`;
     
     const mensagemCodificada = encodeURIComponent(mensagem);
     
@@ -4303,30 +4303,30 @@
         return;
     }
     
-    // Formatando o conteúdo de forma mais limpa
+    // Formatando o conteúdo de forma mais limpa com negritos
     let mensagem = '';
     
     // Cabeçalho
-    mensagem += `SOUZA FARMA\n`;
-    mensagem += `Farmacia do Trabalhador\n`;
+    mensagem += `*SOUZA FARMA*\n`;
+    mensagem += `*Farmacia do Trabalhador*\n`;
     mensagem += `CNPJ: 45.856.880/0001-30\n`;
     mensagem += `Av. Jose Sarney nº 06, Qd 03\n`;
     mensagem += `Bom Jesus - Sao Luis/MA\n`;
     mensagem += `Tel: (98) 98628-7296\n\n`;
-    mensagem += `RESULTADOS DOS TESTES\n\n`;
+    mensagem += `*RESULTADOS DOS TESTES*\n\n`;
     
-    // Adiciona o conteúdo principal (já vem formatado)
+    // Adiciona o conteúdo principal
     mensagem += textoCompleto;
     
     // Garante que o rodapé tenha a observação
     if (!textoCompleto.includes('ATENCAO:')) {
-        mensagem += `\n\nATENCAO: Esta informacao e fornecida para orientacao\n`;
+        mensagem += `\n\n*ATENCAO:* Esta informacao e fornecida para orientacao\n`;
         mensagem += `e nao substitui a consulta medica.\n\n`;
     }
     
     const dataAtual = new Date();
     mensagem += `\nDocumento gerado: ${dataAtual.toLocaleDateString('pt-BR')} ${dataAtual.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}\n`;
-    mensagem += `Souza Farma - Cuidando da sua saude, economia e preco baixo`;
+    mensagem += `*Souza Farma - Cuidando da sua saude, economia e preco baixo*`;
     
     const mensagemCodificada = encodeURIComponent(mensagem);
     
@@ -5117,32 +5117,32 @@
     let mensagem = '';
     
     // Cabeçalho
-    mensagem += `SOUZA FARMA\n`;
-    mensagem += `Farmacia do Trabalhador\n`;
+    mensagem += `*SOUZA FARMA*\n`;
+    mensagem += `*Farmacia do Trabalhador*\n`;
     mensagem += `CNPJ: 45.856.880/0001-30\n`;
     mensagem += `Av. Jose Sarney nº 06, Qd 03\n`;
     mensagem += `Bom Jesus - Sao Luis/MA\n`;
     mensagem += `Tel: (98) 98628-7296\n\n`;
-    mensagem += `RESULTADOS DOS TESTES\n\n`;
+    mensagem += `*RESULTADOS DOS TESTES*\n\n`;
     
     // Dados do Cliente
-    mensagem += `Cliente: ${cliente.nome}\n`;
-    mensagem += `Idade: ${idadeTexto}\n`;
-    mensagem += `Telefone: ${cliente.telefone}\n`;
-    mensagem += `Data: ${dataFormatada}\n`;
-    mensagem += `Hora: ${horaFormatada}\n\n`;
+    mensagem += `*Cliente:* ${cliente.nome}\n`;
+    mensagem += `*Idade:* ${idadeTexto}\n`;
+    mensagem += `*Telefone:* ${cliente.telefone}\n`;
+    mensagem += `*Data:* ${dataFormatada}\n`;
+    mensagem += `*Hora:* ${horaFormatada}\n\n`;
     
     // Glicemia
     if (testeGlicemia) {
         const classificacao = extractClassification(testeGlicemia.resultado);
         const recomendacoes = extractRecommendations(testeGlicemia.mensagem);
         
-        mensagem += `TESTE DE GLICEMIA\n`;
-        mensagem += `Valor: ${testeGlicemia.valor} mg/dL\n`;
-        mensagem += `RESULTADO: ${classificacao}\n`;
+        mensagem += `*TESTE DE GLICEMIA*\n`;
+        mensagem += `*Valor:* ${testeGlicemia.valor} mg/dL\n`;
+        mensagem += `*RESULTADO:* ${classificacao}\n`;
         
         if (recomendacoes.length > 0) {
-            mensagem += `RECOMENDACOES:\n`;
+            mensagem += `*RECOMENDACOES:*\n`;
             for (let i = 0; i < recomendacoes.length; i++) {
                 mensagem += `→ ${recomendacoes[i]}\n`;
             }
@@ -5155,12 +5155,12 @@
         const classificacao = extractClassification(testePressao.resultado);
         const recomendacoes = extractRecommendations(testePressao.mensagem);
         
-        mensagem += `TESTE DE PRESSAO ARTERIAL\n`;
-        mensagem += `Valor: ${testePressao.valor} mmHg\n`;
-        mensagem += `RESULTADO: ${classificacao}\n`;
+        mensagem += `*TESTE DE PRESSAO ARTERIAL*\n`;
+        mensagem += `*Valor:* ${testePressao.valor} mmHg\n`;
+        mensagem += `*RESULTADO:* ${classificacao}\n`;
         
         if (recomendacoes.length > 0) {
-            mensagem += `RECOMENDACOES:\n`;
+            mensagem += `*RECOMENDACOES:*\n`;
             for (let i = 0; i < recomendacoes.length; i++) {
                 mensagem += `→ ${recomendacoes[i]}\n`;
             }
@@ -5173,12 +5173,12 @@
         const classificacao = extractClassification(testePulso.resultado);
         const recomendacoes = extractRecommendations(testePulso.mensagem);
         
-        mensagem += `FREQUENCIA CARDIACA (PULSO)\n`;
-        mensagem += `Valor: ${testePulso.valor} bpm\n`;
-        mensagem += `RESULTADO: ${classificacao}\n`;
+        mensagem += `*FREQUENCIA CARDIACA (PULSO)*\n`;
+        mensagem += `*Valor:* ${testePulso.valor} bpm\n`;
+        mensagem += `*RESULTADO:* ${classificacao}\n`;
         
         if (recomendacoes.length > 0) {
-            mensagem += `RECOMENDACOES:\n`;
+            mensagem += `*RECOMENDACOES:*\n`;
             for (let i = 0; i < recomendacoes.length; i++) {
                 mensagem += `→ ${recomendacoes[i]}\n`;
             }
@@ -5187,10 +5187,10 @@
     }
     
     // Rodapé
-    mensagem += `ATENCAO: Esta informacao e fornecida para orientacao\n`;
+    mensagem += `*ATENCAO:* Esta informacao e fornecida para orientacao\n`;
     mensagem += `e nao substitui a consulta medica.\n\n`;
     mensagem += `Documento gerado: ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}\n`;
-    mensagem += `Souza Farma - Cuidando da sua saude, economia e preco baixo`;
+    mensagem += `*Souza Farma - Cuidando da sua saude, economia e preco baixo*`;
     
     const mensagemCodificada = encodeURIComponent(mensagem);
     
